@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS SalaryHunter;
 USE SalaryHunter;
 
--- DROP TABLE Registered_User;
+-- DROP TABLE IF EXISTS Registered_User ;
 CREATE TABLE IF NOT EXISTS Registered_User (
 	username VARCHAR(64) PRIMARY KEY,
     password VARCHAR(64) NOT NULL
@@ -14,11 +14,12 @@ CREATE TABLE IF NOT EXISTS State_Area (
 );
 
 CREATE TABLE IF NOT EXISTS Company_Branch (
-	company_id INT PRIMARY KEY,
+	company_id INT AUTO_INCREMENT PRIMARY KEY,
     company_name VARCHAR(64) NOT NULL,
     state_abbr CHAR(2) NOT NULL,
     industry_name VARCHAR(64) NOT NULL,
-    FOREIGN KEY (state_abbr) REFERENCES State_Area(state_abbr) ON DELETE CASCADE
+    FOREIGN KEY (state_abbr) REFERENCES State_Area(state_abbr)
+		ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Job_Position (
@@ -29,21 +30,37 @@ CREATE TABLE IF NOT EXISTS Job_Position (
 );
 
 CREATE TABLE IF NOT EXISTS Benifit (
-	benefit_type ENUM('Insurance', 'Holiday', 'Stock', 'Retirement', 'Family'),
-    benefit_name VARCHAR(64) PRIMARY KEY
+    benefit_name VARCHAR(64) PRIMARY KEY,
+	benefit_type ENUM('Insurance', 'Holiday', 'Stock', 'Retirement', 'Family')
 );
 
 CREATE TABLE IF NOT EXISTS Background (
-	username VARCHAR(64) NOT NULL,
+	background_id INT AUTO_INCREMENT PRIMARY KEY,
 	degree_level ENUM('BS', 'MS', 'PhD'),
     university_name VARCHAR(64) NOT NULL,
-    year_of_work VARCHAR(2) NOT NULL,
-    FOREIGN KEY (username) REFERENCES Registered_User(username)
-		ON UPDATE CASCADE ON DELETE CASCADE
+    year_of_work VARCHAR(2) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS SKill (
 	skill_name VARCHAR(64) PRIMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS User_Background (
+	username VARCHAR(64) NOT NULL,
+    background_id INT NOT NULL,
+    FOREIGN KEY (username) REFERENCES Registered_User(username)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (background_id) REFERENCES Background(background_id)
+		ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS User_Skill (
+	username VARCHAR(64) NOT NULL,
+    skill_name VARCHAR(64) NOT NULL,
+    FOREIGN KEY (username) REFERENCES Registered_User(username)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (skill_name) REFERENCES SKill(skill_name)
+		ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Interview (
