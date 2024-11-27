@@ -1,3 +1,5 @@
+DROP DATABASE IF EXISTS SalaryHunter;
+
 CREATE DATABASE IF NOT EXISTS SalaryHunter;
 USE SalaryHunter;
 
@@ -85,8 +87,6 @@ CREATE TABLE IF NOT EXISTS User_Interview_Position (
 );
 
 INSERT INTO Registered_User (username, password) VALUES('abc', '123456');
- SELECT * FROM Registered_User;
-DELETE FROM Registered_User WHERE username = 'abc';
 
 INSERT INTO State_Area (state_abbr, state_name, in_area) 
 VALUES 
