@@ -3,7 +3,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.JDBCType;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 
 public class model {
@@ -45,7 +47,6 @@ public class model {
         return (password.equals(passwordIndb));
     }
 
-
     public boolean addUser(String username, String password) throws SQLException {
         PreparedStatement insertUser = connection.prepareStatement(
             "{ CALL InsertUser(?, ?) }"
@@ -55,4 +56,31 @@ public class model {
         int update = insertUser.executeUpdate();
         return (update > 0);
     }
+
+    public boolean recordSearch(String companyName, String stateAbbr, String area, String industry, String position) throws SQLException {
+        try (PreparedStatement recordStmt = connection.prepareStatement(
+            "{ CALL InsertSearchRecord(?, ?, ?, ?, ?) }")) {
+            recordStmt.setString(1, companyName);
+            recordStmt.setString(2, stateAbbr);
+            recordStmt.setString(3, area);
+            recordStmt.setString(4, industry);
+            recordStmt.setString(5, position);
+            int update = recordStmt.executeUpdate();
+            return (update > 0);
+        }   
+    }
+
+    public void executeSearch(String query, List<String> parameters) throws SQLException {
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            for (int i = 0; i < parameters.size(); i++) {
+                stmt.setString(i + 1, parameters.get(i));
+            }
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    System.out.println(rs.getString("company_name"));
+                }
+            }
+        }
+    }
+
 }

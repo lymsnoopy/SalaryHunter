@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS Registered_User (
 CREATE TABLE IF NOT EXISTS State_Area (
     state_abbr CHAR(2) PRIMARY KEY,
     state_name VARCHAR(64) NOT NULL,
-    in_area ENUM('northeast', 'midwest', 'south', 'west') NOT NULL
+    in_area ENUM('Northeast', 'Midwest', 'South', 'West') NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Company_Branch (
@@ -36,7 +36,10 @@ CREATE TABLE IF NOT EXISTS Job_Position (
 
 CREATE TABLE IF NOT EXISTS Benifit (
     benefit_name VARCHAR(64) PRIMARY KEY,
-	benefit_type ENUM('Insurance', 'Holiday', 'Stock', 'Retirement', 'Family')
+	benefit_type ENUM('Insurance', 'Holiday', 'Stock', 'Retirement', 'Family'),
+    position_name VARCHAR(64) PRIMARY KEY,
+	FOREIGN KEY (position_name) REFERENCES Job_Position(position_name)
+		ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Background (
@@ -145,7 +148,7 @@ VALUES
     ('WY', 'Wyoming', 'west');
 
 INSERT INTO Job_Position (position_name, description, year, salary_amount) 
-	VALUES('SoftWare Engineer 1', '', 2023, 100000.00);
+	VALUES('SoftWare Engineer 1', 'software develop.', 2023, 100000.00);
 
 
 -- DROP FUNCTION IF EXISTS check_user_exist;
