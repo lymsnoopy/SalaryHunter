@@ -1,5 +1,6 @@
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class controller {
 
@@ -23,5 +24,13 @@ public class controller {
 
     public ResultSet DisplayRecord(String newUsername) throws SQLException {
         return model.ShowUserRecord(newUsername);
+    }
+    
+    public boolean recordSearchToDB(String companyName, String stateAbbr, String area, String industry, String position) throws SQLException {
+        return model.recordSearch(companyName, stateAbbr, area, industry, position);
+    }
+    
+    public void executeSearchFromDB(String query, List<String> parameters) throws SQLException {
+        model.executeSearch(query, parameters);
     }
 }

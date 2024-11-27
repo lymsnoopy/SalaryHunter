@@ -46,6 +46,9 @@ public class AppLoginFrame extends JFrame {
                         } else {
                             if (controller.checkPassword(username, password)) {
                                 JOptionPane.showMessageDialog(null, "Login Successfully!", "Successfully", JOptionPane.INFORMATION_MESSAGE);
+                                dispose();
+                                SearchFrame SearchFrame = new SearchFrame(controller, username);
+                                SearchFrame.setVisible(true);
                             // main page?
                             } else {
                                 JOptionPane.showMessageDialog(null, "Incorrect password. Please try again.", "Error", JOptionPane.INFORMATION_MESSAGE);
