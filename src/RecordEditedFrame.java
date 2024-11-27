@@ -4,13 +4,13 @@ import java.sql.SQLException;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-public class RecordEdited {
+public class RecordEditedFrame {
 
     JFrame record = new JFrame("User Record");
     JTable recordTable = new JTable();
     JScrollPane scrollPane = new JScrollPane(recordTable);
 
-    public RecordEdited(controller controller, String username) {
+    public RecordEditedFrame(controller controller, String username) {
         try {
             ResultSet userRecord = controller.DisplayRecord(username);
             ResultSetMetaData metaData = userRecord.getMetaData();
