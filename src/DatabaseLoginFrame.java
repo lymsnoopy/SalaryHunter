@@ -39,12 +39,18 @@ public class DatabaseLoginFrame extends JFrame {
 
                 // login successfully
                 try {
-                    controller.dbLogin(username, password);
-                    JOptionPane.showMessageDialog(null, "Connected to database.", "Connected Successfully!", JOptionPane.INFORMATION_MESSAGE);
+                    if (!username.isEmpty() && !password.isEmpty()) {
+                        controller.dbLogin(username, password);
+                        JOptionPane.showMessageDialog(null, "Connected to database.", "Connected Successfully!", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Username or password cannot be null.", "Error", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 } catch (SQLException er) {
                     JOptionPane.showMessageDialog(null, er.toString(), "Error", JOptionPane.INFORMATION_MESSAGE);
                 }
-                // jump into app login in page
+                dispose();
+                AppLoginFrame appLoginFrame = new AppLoginFrame(controller);
+                appLoginFrame.setVisible(true);
             }
         });
 

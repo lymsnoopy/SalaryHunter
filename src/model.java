@@ -34,12 +34,25 @@ public class model {
         return checkUser.getBoolean(1);
     }
 
+    public boolean passwordMatch(String username, String password) throws SQLException {
+        CallableStatement checkPassword = connection.prepareCall(
+            "{ ? = call password_match(?) }"
+        );
+        checkPassword.registerOutParameter(1, JDBCType.VARCHAR);
+        checkPassword.setString(2, username);
+        checkPassword.execute();
+        String passwordIndb = checkPassword.getString(1);
+        return (password.equals(passwordIndb));
+    }
+
+
     public boolean addUser(String username, String password) throws SQLException {
         PreparedStatement insertUser = connection.prepareStatement(
-            "INSERT INTO Registered_User (username, password) VALUES ('?', '?');"
+            "{ CALL InsertUser(?, ?) }"
         );
         insertUser.setString(1, username);
         insertUser.setString(2, password);
-        return insertUser.execute();
+        int update = insertUser.executeUpdate();
+        return (update > 0);
     }
 }
