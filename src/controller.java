@@ -1,3 +1,4 @@
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class controller {
@@ -18,5 +19,9 @@ public class controller {
 
     public boolean addUserToDB(String newUsername, String newPassword) throws SQLException {
         return model.addUser(newUsername, newPassword);
+    }
+
+    public ResultSet DisplayRecord(String newUsername) throws SQLException {
+        return model.ShowUserRecord(newUsername);
     }
 }

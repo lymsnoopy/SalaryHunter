@@ -28,12 +28,18 @@ CREATE TABLE IF NOT EXISTS Job_Position (
 	position_name VARCHAR(64) PRIMARY KEY,
     description VARCHAR(500),
     year YEAR NOT NULL,
-    salary_amount DECIMAL(10, 2) NOT NULL CHECK (salary_amount >= 0)
+    salary_amount DECIMAL(10, 2) NOT NULL CHECK (salary_amount >= 0),
+    company_id INT,
+    FOREIGN KEY (company_id) REFERENCES Company_Branch(company_id)
+		ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Benifit (
     benefit_name VARCHAR(64) PRIMARY KEY,
-	benefit_type ENUM('Insurance', 'Holiday', 'Stock', 'Retirement', 'Family')
+	benefit_type ENUM('Insurance', 'Holiday', 'Stock', 'Retirement', 'Family'),
+    position_name VARCHAR(64),
+    FOREIGN KEY (position_name) REFERENCES Job_Position(position_name)
+		ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Background (
@@ -178,3 +184,27 @@ BEGIN
     VALUES (p_username, p_password);
 END //
 DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE user_record(
+    IN r_username VARCHAR(64)
+)
+BEGIN
+    SELECT sa.in_area, cb.industry_name, cb.company_name, jp.position_name, jp.description, 
+           jp.year, jp.salary_amount, be.benefit_type, be.benfit_name, ba.degree_level, 
+           ba.year_of_work, sk.skill_name, iv.type, iv.description FROM Registered_User
+        INNER JOIN User_Interview_Position USING username
+        INNER JOIN Interview AS iv USING interview_id
+        INNER JOIN Job_Position AS jp USING position_name
+        INNER JOIN Company_Branch AS cb USING company_id
+        INNER JOIN State_Area AS sa USING state_abbr
+        INNER JOIN Benefit AS be USING position_name
+        INNER JOIN User_Background USING username
+        INNER JOIN Background AS ba USING background_id
+        INNER JOIN User_Skill USING username
+        INNER JOIN Skill AS sk USING skill_name
+    WHERE username = r_username;
+END //
+DELIMITER ;
+
+

@@ -3,6 +3,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.JDBCType;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -54,5 +55,13 @@ public class model {
         insertUser.setString(2, password);
         int update = insertUser.executeUpdate();
         return (update > 0);
+    }
+
+    public ResultSet ShowUserRecord(String username) throws SQLException {
+        PreparedStatement userRecord = connection.prepareStatement(
+            "{ CALL user_record(?) }"
+        );
+        userRecord.setString(1, username); 
+        return userRecord.executeQuery();
     }
 }
