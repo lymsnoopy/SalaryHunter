@@ -11,10 +11,9 @@ public class model {
     private Connection connection = null;
     private final String dbName = "SalaryHunter";
 
-    public void login(String username, String password) throws SQLException {
+    public void databaseLogin(String username, String password) throws SQLException {
         String serverName = "localhost";
         int portNumber = 3306;
-        // String dbName = "salary_hunter";
         Properties connectionProps = new Properties();
         connectionProps.put("user", username);
         connectionProps.put("password", password);

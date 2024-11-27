@@ -7,7 +7,7 @@ public class SalaryHunterApp {
             @Override
             public void run() {
                 // Create and show the LoginFrame
-                new LoginFrame().setVisible(true);
+                new DatabaseLoginFrame().setVisible(true);
             }
         });
     }

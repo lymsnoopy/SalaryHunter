@@ -4,22 +4,22 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import javax.swing.*;
 
-public class LoginFrame extends JFrame {
+public class DatabaseLoginFrame extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private String username;
     private String password;
-    private model model = new model();
+    private controller controller = new controller();
 
-    public LoginFrame() {
-        setTitle("Login Page");
+    public DatabaseLoginFrame() {
+        setTitle("Database Login Page");
         setSize(1000, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         
         // Create panel
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3, 2));
+        panel.setLayout(new GridLayout(4, 2));
 
         // Create username label and password label
         JLabel usernameLabel = new JLabel("Username: ");
@@ -28,7 +28,7 @@ public class LoginFrame extends JFrame {
         passwordField = new JPasswordField();
 
         // Create login and register button
-        JButton loginButton = new JButton("Login");
+        JButton loginButton = new JButton("DatabaseLogin");
 
         // Add listener for login button
         loginButton.addActionListener(new ActionListener() {
@@ -39,16 +39,12 @@ public class LoginFrame extends JFrame {
 
                 // login successfully
                 try {
-                    model.login(username, password);
+                    controller.dbLogin(username, password);
                     JOptionPane.showMessageDialog(null, "Connected to database.", "Connected Successfully!", JOptionPane.INFORMATION_MESSAGE);
-                    boolean user = model.existsUsername(username);
-                    if (user == false) {
-                        model.addUser(username, password);
-                    }
                 } catch (SQLException er) {
                     JOptionPane.showMessageDialog(null, er.toString(), "Error", JOptionPane.INFORMATION_MESSAGE);
                 }
-                // jump into selection page
+                // jump into app login in page
             }
         });
 
