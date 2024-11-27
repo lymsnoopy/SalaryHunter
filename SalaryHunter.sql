@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS Registered_User (
 );
 
 INSERT INTO Registered_User (username, password) VALUES('romine24', 'Lym13416324524$');
--- SELECT * FROM Registered_User;
+ SELECT * FROM Registered_User;
+DELETE FROM Registered_User WHERE username = 'abc';
 
 -- DROP FUNCTION IF EXISTS check_user_exist;
 DELIMITER //
