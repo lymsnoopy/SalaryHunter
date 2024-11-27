@@ -153,3 +153,27 @@ BEGIN
     RETURN user_exists;
 END //
 DELIMITER ;
+
+DELIMITER //
+CREATE FUNCTION password_match(
+    user VARCHAR(64) 
+)
+RETURNS VARCHAR(64) 
+DETERMINISTIC READS SQL DATA
+BEGIN
+    DECLARE user_password VARCHAR(64);
+    SELECT password INTO user_password FROM Registered_User WHERE username = user;
+    RETURN user_password;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE InsertUser(
+    IN p_username VARCHAR(64),
+    IN p_password VARCHAR(64)
+)
+BEGIN
+    INSERT INTO Registered_User (username, password)
+    VALUES (p_username, p_password);
+END //
+DELIMITER ;
