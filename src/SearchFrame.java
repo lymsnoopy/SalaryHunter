@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 
-public class FunctionFrame extends JFrame {
+public class SearchFrame extends JFrame {
     private JTextField companyNameField;
     private JTextField stateAbbrField;
     private JComboBox<String> areaComboBox;
@@ -21,7 +21,7 @@ public class FunctionFrame extends JFrame {
 
     private controller controller;
 
-    public FunctionFrame(controller controller) {
+    public SearchFrame(controller controller, String username) {
         this.controller = controller;
 
         // Frame properties
@@ -151,7 +151,9 @@ public class FunctionFrame extends JFrame {
         viewRecordButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new RecordEditedFrame(controller).setVisible(true);
+                dispose();
+                RecordEditedFrame RecordEditedFrame = new RecordEditedFrame(controller, username);
+                RecordEditedFrame.setVisible(true);
             }
         });
 
