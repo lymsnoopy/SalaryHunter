@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS User_Interview_Position (
     FOREIGN KEY (position_name) REFERENCES Job_Position(position_name)
 );
 
-INSERT INTO Registered_User (username, password) VALUES('romine24', 'Lym13416324524$');
+INSERT INTO Registered_User (username, password) VALUES('abc', '123456');
  SELECT * FROM Registered_User;
 DELETE FROM Registered_User WHERE username = 'abc';
 
