@@ -28,7 +28,10 @@ CREATE TABLE IF NOT EXISTS Job_Position (
 	position_name VARCHAR(64) PRIMARY KEY,
     description VARCHAR(500),
     year YEAR NOT NULL,
-    salary_amount DECIMAL(10, 2) NOT NULL CHECK (salary_amount >= 0)
+    salary_amount DECIMAL(10, 2) NOT NULL CHECK (salary_amount >= 0),
+    company_id INT AUTO_INCREMENT PRIMARY KEY,
+    FOREIGN KEY (company_id) REFERENCES Company_Branch(company_id)
+		ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Benifit (
@@ -140,6 +143,10 @@ VALUES
     ('WV', 'West Virginia', 'south'),
     ('WI', 'Wisconsin', 'midwest'),
     ('WY', 'Wyoming', 'west');
+
+INSERT INTO Job_Position (position_name, description, year, salary_amount) 
+	VALUES('SoftWare Engineer 1', '', 2023, 100000.00);
+
 
 -- DROP FUNCTION IF EXISTS check_user_exist;
 DELIMITER //
