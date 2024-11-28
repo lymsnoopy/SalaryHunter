@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS Job_Benefit (
     benefit_name VARCHAR(64),
     FOREIGN KEY (job_id) REFERENCES Job_Position(job_id)
 		ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY (benefit_name) REFERENCES Benifit(benefit_name)
+	FOREIGN KEY (benefit_name) REFERENCES Benefit(benefit_name)
 		ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -169,7 +169,7 @@ VALUES
 	('Software Engineer III', 'Design AI systems', 2024, 500000.00, 2),
 	('Data Analyst', 'Analyze medical data', 2024, 120000.00, 3);
                  
-INSERT INTO Benifit (benefit_name, benefit_type)
+INSERT INTO Benefit (benefit_name, benefit_type)
 VALUES 
     ('401K', 'Retirement'),
 	('Share Incentive Plan', 'Stock');
@@ -263,12 +263,22 @@ BEGIN
 END //
 DELIMITER ;
 
--- display user record
--- DELIMITER //
--- CREATE PROCEDURE user_record(
---     IN r_username VARCHAR(64)
--- )
--- BEGIN
+-- display user record （simple)
+DELIMITER //
+CREATE PROCEDURE user_record_simple (
+    IN r_username VARCHAR(64)
+)
+BEGIN
+	SELECT cb.company_name, jp.position_name, iv.type FROM Registered_User
+			INNER JOIN User_Interview_Position USING (username)
+			INNER JOIN Job_Position AS jp USING (job_id)
+			INNER JOIN Company_Branch AS cb USING (company_id)
+			INNER JOIN Interview AS iv USING (interview_id)
+		WHERE username = r_username;
+END //
+DELIMITER ;
+
+
 --     SELECT sa.in_area, cb.industry_name, cb.company_name, jp.position_name, jp.description, 
 --            jp.year, jp.salary_amount, be.benefit_type, be.benefit_name, ba.degree_level, 
 --            ba.year_of_work, sk.skill_name, iv.type, iv.description FROM Registered_User
@@ -285,8 +295,8 @@ DELIMITER ;
 --     WHERE username = r_username;
 -- END //
 -- DELIMITER ;
-DELIMITER //
 
+DELIMITER //
 CREATE PROCEDURE GetFilteredRecords(
     IN p_positionName VARCHAR(64),
     IN p_area VARCHAR(16),
@@ -324,30 +334,6 @@ BEGIN
         AND (COALESCE(p_industryName, '') = '' OR cb.industry_name LIKE CONCAT('%', p_industryName, '%'))
         AND (COALESCE(p_companyBranch, '') = '' OR cb.company_name LIKE CONCAT('%', p_companyBranch, '%'));
 END //
-
 DELIMITER ;
-
-DELIMITER //
-CREATE PROCEDURE user_record(
-    IN r_username VARCHAR(64)
-)
-BEGIN
-    SELECT sa.in_area, cb.industry_name, cb.company_name, jp.position_name, jp.description, 
-           jp.year, jp.salary_amount, be.benefit_type, be.benfit_name, ba.degree_level, 
-           ba.year_of_work, sk.skill_name, iv.type, iv.description FROM Registered_User
-        INNER JOIN User_Interview_Position USING username
-        INNER JOIN Interview AS iv USING interview_id
-        INNER JOIN Job_Position AS jp USING position_name
-        INNER JOIN Company_Branch AS cb USING company_id
-        INNER JOIN State_Area AS sa USING state_abbr
-        INNER JOIN Benefit AS be USING position_name
-        INNER JOIN User_Background USING username
-        INNER JOIN Background AS ba USING background_id
-        INNER JOIN User_Skill USING username
-        INNER JOIN Skill AS sk USING skill_name
-    WHERE username = r_username;
-END //
-DELIMITER ;
-
 
 
