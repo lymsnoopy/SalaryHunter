@@ -2,7 +2,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,12 +13,6 @@ public class SearchFrame extends JFrame {
     private JComboBox<String> areaComboBox;
     private JTextField industryField;
     private JTextField positionField;
-
-    private String companyName;
-    private String stateAbbr;
-    private String area;
-    private String industry;
-    private String position;
 
     private controller controller;
 
@@ -96,17 +89,17 @@ public class SearchFrame extends JFrame {
         // Search Button
         JButton searchButton = new JButton("Start Search");
         gbc.gridx = 0;
-        gbc.gridy = 5; // Place it in row 5
-        gbc.gridwidth = 2; // Span across two columns
-        gbc.anchor = GridBagConstraints.CENTER; // Center the button
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
         panel.add(searchButton, gbc);
 
         // View Record Button
         JButton viewRecordButton = new JButton("View History Record");
         gbc.gridx = 0;
-        gbc.gridy = 6; // Place it in row 6 (below the Search Button)
-        gbc.gridwidth = 2; // Span across two columns
-        gbc.anchor = GridBagConstraints.CENTER; // Center the button
+        gbc.gridy = 6;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
         panel.add(viewRecordButton, gbc);
 
         // Add Action Listener to Search Button
@@ -136,14 +129,16 @@ public class SearchFrame extends JFrame {
             }
         });
         
-        
         // Add Action Listener to ViewRecord Button
         viewRecordButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
+                // Open the RecordEditedFrame
                 RecordEditedFrame RecordEditedFrame = new RecordEditedFrame(controller, username);
                 // RecordEditedFrame.setVisible(true);
+
+                // Close the current SearchFrame
+                dispose();
             }
         });
 
