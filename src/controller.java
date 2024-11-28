@@ -31,8 +31,16 @@ public class controller {
         return model.recordSearch(companyName, stateAbbr, area, industry, position);
     }
     
-    public List<Map<String, String>> executeSearchFromDB(String position, String area, String state, String industry, String company) throws SQLException {
-        return model.executeSearch(position, area, state, industry, company);
+    public List<Map<String, String>> executeSearchFromDB(String positionName, String area, String stateAbbr, String industryName, String companyBranch) throws SQLException {
+        return model.executeSearch(positionName, area, stateAbbr, industryName, companyBranch);
     }
-
+    
+    public List<Map<String, String>> getInterviews(String username, String positionName) throws SQLException {
+        return model.getInterviews(username, positionName);
+    }
+    
+    public List<Map<String, String>> getBenefits(String username, String positionName) throws SQLException {
+        return model.getBenefits(username, positionName);
+    }
+    
 }

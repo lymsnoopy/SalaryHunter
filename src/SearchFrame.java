@@ -4,15 +4,14 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
 import javax.swing.*;
 
 public class SearchFrame extends JFrame {
-    private JTextField companyNameField;
+    private JTextField companyBranchField;
     private JTextField stateAbbrField;
     private JComboBox<String> areaComboBox;
-    private JTextField industryField;
-    private JTextField positionField;
+    private JTextField industryNameField;
+    private JTextField positionNameField;
 
     private controller controller;
 
@@ -31,16 +30,16 @@ public class SearchFrame extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Company Name
-        JLabel companyNameLabel = new JLabel("Company Name:");
+        // Company Branch
+        JLabel companyBranchLabel = new JLabel("Company Branch:");
         gbc.gridx = 0;
         gbc.gridy = 0;
-        panel.add(companyNameLabel, gbc);
+        panel.add(companyBranchLabel, gbc);
 
-        companyNameField = new JTextField(20);
+        companyBranchField = new JTextField(20);
         gbc.gridx = 1;
         gbc.gridy = 0;
-        panel.add(companyNameField, gbc);
+        panel.add(companyBranchField, gbc);
 
         // State Abbreviation
         JLabel stateAbbrLabel = new JLabel("State Abbreviation:");
@@ -64,27 +63,27 @@ public class SearchFrame extends JFrame {
         gbc.gridy = 2;
         panel.add(areaComboBox, gbc);
 
-        // Industry
-        JLabel industryLabel = new JLabel("Industry:");
+        // Industry Name
+        JLabel industryNameLabel = new JLabel("Industry Name:");
         gbc.gridx = 0;
         gbc.gridy = 3;
-        panel.add(industryLabel, gbc);
+        panel.add(industryNameLabel, gbc);
 
-        industryField = new JTextField(20);
+        industryNameField = new JTextField(20);
         gbc.gridx = 1;
         gbc.gridy = 3;
-        panel.add(industryField, gbc);
+        panel.add(industryNameField, gbc);
 
-        // Position
-        JLabel positionLabel = new JLabel("Position:");
+        // Position Name
+        JLabel positionNameLabel = new JLabel("Position Name:");
         gbc.gridx = 0;
         gbc.gridy = 4;
-        panel.add(positionLabel, gbc);
+        panel.add(positionNameLabel, gbc);
 
-        positionField = new JTextField(20);
+        positionNameField = new JTextField(20);
         gbc.gridx = 1;
         gbc.gridy = 4;
-        panel.add(positionField, gbc);
+        panel.add(positionNameField, gbc);
 
         // Search Button
         JButton searchButton = new JButton("Start Search");
@@ -106,21 +105,26 @@ public class SearchFrame extends JFrame {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String position = positionField.getText().trim();
+                String positionName = positionNameField.getText().trim();
                 String area = (String) areaComboBox.getSelectedItem();
-                String state = stateAbbrField.getText().trim();
-                String industry = industryField.getText().trim();
-                String companyName = companyNameField.getText().trim();
+                String stateAbbr = stateAbbrField.getText().trim();
+                String industryName = industryNameField.getText().trim();
+                String companyBranch = companyBranchField.getText().trim();
+        
+                System.out.println("Search Parameters: ");
+                System.out.println("Position Name: " + positionName);
+                System.out.println("Area: " + area);
+                System.out.println("State Abbreviation: " + stateAbbr);
+                System.out.println("Industry Name: " + industryName);
+                System.out.println("Company Branch: " + companyBranch);
         
                 try {
-                    // Fetch search results from the controller
-                    List<Map<String, String>> results = controller.executeSearchFromDB(position, area, state, industry, companyName);
+                    List<Map<String, String>> results = controller.executeSearchFromDB(positionName, area, stateAbbr, industryName, companyBranch);
+                    System.out.println("Results fetched: " + results.size());
         
-                    // Open the ResultFrame
                     ResultFrame resultFrame = new ResultFrame(results, controller, username);
                     resultFrame.setVisible(true);
         
-                    // Close the current SearchFrame
                     dispose();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
@@ -129,13 +133,14 @@ public class SearchFrame extends JFrame {
             }
         });
         
-        // Add Action Listener to ViewRecord Button
+
+        // Add Action Listener to View Record Button
         viewRecordButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Open the RecordEditedFrame
-                RecordEditedFrame RecordEditedFrame = new RecordEditedFrame(controller, username);
-                // RecordEditedFrame.setVisible(true);
+                RecordEditedFrame recordEditedFrame = new RecordEditedFrame(controller, username);
+                // recordEditedFrame.setVisible(true);
 
                 // Close the current SearchFrame
                 dispose();
