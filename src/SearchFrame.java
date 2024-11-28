@@ -4,6 +4,8 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import javax.swing.*;
 
 public class SearchFrame extends JFrame {
@@ -111,44 +113,30 @@ public class SearchFrame extends JFrame {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                companyName = companyNameField.getText();
-                stateAbbr = stateAbbrField.getText();
-                area = (String) areaComboBox.getSelectedItem();
-                industry = industryField.getText();
-                position = positionField.getText();
-
-                StringBuilder query = new StringBuilder("SELECT * FROM Job_Postings WHERE 1=1");
-                List<String> parameters = new ArrayList<>();
-
-                if (companyName != null && !companyName.trim().isEmpty()) {
-                    query.append(" AND company_name LIKE ?");
-                    parameters.add("%" + companyName.trim() + "%");
-                }
-                if (stateAbbr != null && !stateAbbr.trim().isEmpty()) {
-                    query.append(" AND state_abbr = ?");
-                    parameters.add(stateAbbr.trim());
-                }
-                if (area != null && !area.trim().isEmpty()) {
-                    query.append(" AND area = ?");
-                    parameters.add(area.trim());
-                }
-                if (industry != null && !industry.trim().isEmpty()) {
-                    query.append(" AND industry LIKE ?");
-                    parameters.add("%" + industry.trim() + "%");
-                }
-                if (position != null && !position.trim().isEmpty()) {
-                    query.append(" AND position LIKE ?");
-                    parameters.add("%" + position.trim() + "%");
-                }
-
+                String position = positionField.getText().trim();
+                String area = (String) areaComboBox.getSelectedItem();
+                String state = stateAbbrField.getText().trim();
+                String industry = industryField.getText().trim();
+                String companyName = companyNameField.getText().trim();
+        
                 try {
-                    controller.executeSearchFromDB(query.toString(), parameters);
+                    // Fetch search results from the controller
+                    List<Map<String, String>> results = controller.executeSearchFromDB(position, area, state, industry, companyName);
+        
+                    // Open the ResultFrame
+                    ResultFrame resultFrame = new ResultFrame(results, controller, username);
+                    resultFrame.setVisible(true);
+        
+                    // Close the current SearchFrame
+                    dispose();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
+                    JOptionPane.showMessageDialog(SearchFrame.this, "Error executing search.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
-
+        
+        
         // Add Action Listener to ViewRecord Button
         viewRecordButton.addActionListener(new ActionListener() {
             @Override

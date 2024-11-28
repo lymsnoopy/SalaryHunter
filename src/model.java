@@ -5,7 +5,10 @@ import java.sql.JDBCType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class model {
@@ -78,17 +81,37 @@ public class model {
         }   
     }
 
-    public void executeSearch(String query, List<String> parameters) throws SQLException {
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            for (int i = 0; i < parameters.size(); i++) {
-                stmt.setString(i + 1, parameters.get(i));
-            }
+    public List<Map<String, String>> executeSearch(String position, String area, String state, String industry, String company) throws SQLException {
+        List<Map<String, String>> results = new ArrayList<>();
+        String sql = "{ CALL GetFilteredRecords(?, ?, ?, ?, ?) }";
+
+        try (CallableStatement stmt = connection.prepareCall(sql)) {
+            // Bind parameters to the stored procedure
+            stmt.setString(1, position != null && !position.isEmpty() ? position : null);
+            stmt.setString(2, area != null && !area.isEmpty() ? area : null);
+            stmt.setString(3, state != null && !state.isEmpty() ? state : null);
+            stmt.setString(4, industry != null && !industry.isEmpty() ? industry : null);
+            stmt.setString(5, company != null && !company.isEmpty() ? company : null);
+
+            // Execute the stored procedure
             try (ResultSet rs = stmt.executeQuery()) {
+                // Iterate through the result set and map results
                 while (rs.next()) {
-                    System.out.println(rs.getString("company_name"));
+                    Map<String, String> row = new HashMap<>();
+                    row.put("username", rs.getString("username"));
+                    row.put("company_name", rs.getString("company_name"));
+                    row.put("state", rs.getString("state"));
+                    row.put("area", rs.getString("area"));
+                    row.put("position", rs.getString("position"));
+                    row.put("position_description", rs.getString("position_description"));
+                    row.put("year", rs.getString("year"));
+                    row.put("salary_amount", rs.getString("salary_amount"));
+                    row.put("interview", rs.getString("interview"));
+                    row.put("interview_description", rs.getString("interview_description"));
+                    results.add(row);
                 }
             }
         }
+        return results;
     }
-
 }

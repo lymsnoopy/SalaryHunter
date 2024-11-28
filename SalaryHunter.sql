@@ -3,25 +3,25 @@ DROP DATABASE IF EXISTS SalaryHunter;
 CREATE DATABASE IF NOT EXISTS SalaryHunter;
 USE SalaryHunter;
 
--- DROP TABLE IF EXISTS Registered_User ;
 CREATE TABLE IF NOT EXISTS Registered_User (
 	username VARCHAR(64) PRIMARY KEY,
     password VARCHAR(64) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS State_Area (
-    state_abbr CHAR(2) PRIMARY KEY,
+    state_id INT AUTO_INCREMENT PRIMARY KEY,
+    state_abbr CHAR(2) NOT NULL,
     state_name VARCHAR(64) NOT NULL,
     in_area ENUM('Northeast', 'Midwest', 'South', 'West') NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Company_Branch (
-	company_id INT AUTO_INCREMENT PRIMARY KEY,
+    company_id INT AUTO_INCREMENT PRIMARY KEY,
     company_name VARCHAR(64) NOT NULL,
-    state_abbr CHAR(2) NOT NULL,
+    state_id INT NOT NULL,
     industry_name VARCHAR(64) NOT NULL,
-    FOREIGN KEY (state_abbr) REFERENCES State_Area(state_abbr)
-		ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (state_id) REFERENCES State_Area(state_id)
+        ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Job_Position (
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS Job_Position (
 		ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Benifit (
+CREATE TABLE IF NOT EXISTS Benefit (
     benefit_name VARCHAR(64) PRIMARY KEY,
 	benefit_type ENUM('Insurance', 'Holiday', 'Stock', 'Retirement', 'Family'),
     position_name VARCHAR(64),
@@ -109,10 +109,12 @@ VALUES
     ('MA', 'Massachusetts', 'Northeast');
 
 -- Insert Company Branches
-INSERT INTO Company_Branch (company_name, state_abbr, industry_name) VALUES 
-('Google', 'CA', 'Technology'),
-('Amazon', 'WA', 'E-Commerce'),
-('Tesla', 'NV', 'Automotive');
+INSERT INTO Company_Branch (company_name, state_id, industry_name) 
+VALUES 
+    ('Google', (SELECT state_id FROM State_Area WHERE state_abbr = 'CA'), 'Technology'),
+    ('Amazon', (SELECT state_id FROM State_Area WHERE state_abbr = 'WA'), 'E-Commerce'),
+    ('Tesla', (SELECT state_id FROM State_Area WHERE state_abbr = 'NV'), 'Automotive');
+
 
 -- Insert Job Positions
 INSERT INTO Job_Position (position_name, description, year, salary_amount, company_id) VALUES 
@@ -169,57 +171,56 @@ INSERT INTO User_Interview_Position (username, interview_id, position_name, has_
 
 INSERT INTO State_Area (state_abbr, state_name, in_area) 
 VALUES 
-    ('AL', 'Alabama', 'south'),
-    ('AK', 'Alaska', 'west'),
-    ('AZ', 'Arizona', 'west'),
-    ('AR', 'Arkansas', 'south'),
-    ('CA', 'California', 'west'),
-    ('CO', 'Colorado', 'west'),
-    ('CT', 'Connecticut', 'northeast'),
-    ('DE', 'Delaware', 'south'),
-    ('FL', 'Florida', 'south'),
-    ('GA', 'Georgia', 'south'),
-    ('HI', 'Hawaii', 'west'),
-    ('ID', 'Idaho', 'west'),
-    ('IL', 'Illinois', 'midwest'),
-    ('IN', 'Indiana', 'midwest'),
-    ('IA', 'Iowa', 'midwest'),
-    ('KS', 'Kansas', 'midwest'),
-    ('KY', 'Kentucky', 'south'),
-    ('LA', 'Louisiana', 'south'),
-    ('ME', 'Maine', 'northeast'),
-    ('MD', 'Maryland', 'south'),
-    ('MA', 'Massachusetts', 'northeast'),
-    ('MI', 'Michigan', 'midwest'),
-    ('MN', 'Minnesota', 'midwest'),
-    ('MS', 'Mississippi', 'south'),
-    ('MO', 'Missouri', 'midwest'),
-    ('MT', 'Montana', 'west'),
-    ('NE', 'Nebraska', 'midwest'),
-    ('NV', 'Nevada', 'west'),
-    ('NH', 'New Hampshire', 'northeast'),
-    ('NJ', 'New Jersey', 'northeast'),
-    ('NM', 'New Mexico', 'west'),
-    ('NY', 'New York', 'northeast'),
-    ('NC', 'North Carolina', 'south'),
-    ('ND', 'North Dakota', 'midwest'),
-    ('OH', 'Ohio', 'midwest'),
-    ('OK', 'Oklahoma', 'south'),
-    ('OR', 'Oregon', 'west'),
-    ('PA', 'Pennsylvania', 'northeast'),
-    ('RI', 'Rhode Island', 'northeast'),
-    ('SC', 'South Carolina', 'south'),
-    ('SD', 'South Dakota', 'midwest'),
-    ('TN', 'Tennessee', 'south'),
-    ('TX', 'Texas', 'south'),
-    ('UT', 'Utah', 'west'),
-    ('VT', 'Vermont', 'northeast'),
-    ('VA', 'Virginia', 'south'),
-    ('WA', 'Washington', 'west'),
-    ('WV', 'West Virginia', 'south'),
-    ('WI', 'Wisconsin', 'midwest'),
-    ('WY', 'Wyoming', 'west');
-
+    ('AL', 'Alabama', 'South'),
+    ('AK', 'Alaska', 'West'),
+    ('AZ', 'Arizona', 'West'),
+    ('AR', 'Arkansas', 'South'),
+    ('CA', 'California', 'West'),
+    ('CO', 'Colorado', 'West'),
+    ('CT', 'Connecticut', 'Northeast'),
+    ('DE', 'Delaware', 'South'),
+    ('FL', 'Florida', 'South'),
+    ('GA', 'Georgia', 'South'),
+    ('HI', 'Hawaii', 'West'),
+    ('ID', 'Idaho', 'West'),
+    ('IL', 'Illinois', 'Midwest'),
+    ('IN', 'Indiana', 'Midwest'),
+    ('IA', 'Iowa', 'Midwest'),
+    ('KS', 'Kansas', 'Midwest'),
+    ('KY', 'Kentucky', 'South'),
+    ('LA', 'Louisiana', 'South'),
+    ('ME', 'Maine', 'Northeast'),
+    ('MD', 'Maryland', 'South'),
+    ('MA', 'Massachusetts', 'Northeast'),
+    ('MI', 'Michigan', 'Midwest'),
+    ('MN', 'Minnesota', 'Midwest'),
+    ('MS', 'Mississippi', 'South'),
+    ('MO', 'Missouri', 'Midwest'),
+    ('MT', 'Montana', 'West'),
+    ('NE', 'Nebraska', 'Midwest'),
+    ('NV', 'Nevada', 'West'),
+    ('NH', 'New Hampshire', 'Northeast'),
+    ('NJ', 'New Jersey', 'Northeast'),
+    ('NM', 'New Mexico', 'West'),
+    ('NY', 'New York', 'Northeast'),
+    ('NC', 'North Carolina', 'South'),
+    ('ND', 'North Dakota', 'Midwest'),
+    ('OH', 'Ohio', 'Midwest'),
+    ('OK', 'Oklahoma', 'South'),
+    ('OR', 'Oregon', 'West'),
+    ('PA', 'Pennsylvania', 'Northeast'),
+    ('RI', 'Rhode Island', 'Northeast'),
+    ('SC', 'South Carolina', 'South'),
+    ('SD', 'South Dakota', 'Midwest'),
+    ('TN', 'Tennessee', 'South'),
+    ('TX', 'Texas', 'South'),
+    ('UT', 'Utah', 'West'),
+    ('VT', 'Vermont', 'Northeast'),
+    ('VA', 'Virginia', 'South'),
+    ('WA', 'Washington', 'West'),
+    ('WV', 'West Virginia', 'South'),
+    ('WI', 'Wisconsin', 'Midwest'),
+    ('WY', 'Wyoming', 'West');
 
 
 -- DROP FUNCTION IF EXISTS check_user_exist;
@@ -261,6 +262,39 @@ END //
 DELIMITER ;
 
 DELIMITER //
+CREATE PROCEDURE GetFilteredRecords(
+    IN p_position VARCHAR(64),
+    IN p_area VARCHAR(16),
+    IN p_state VARCHAR(16),
+    IN p_industry VARCHAR(64),
+    IN p_company VARCHAR(64)
+)
+BEGIN
+    SELECT uip.username,
+           cb.company_name, 
+           sa.state_abbr AS state,
+           sa.in_area AS area,
+           jp.position_name AS position,
+           jp.description AS position_description,
+           jp.year,
+           jp.salary_amount,
+           i.interview_type AS interview,
+           i.description AS interview_description
+    FROM User_Interview_Position uip
+    JOIN Job_Position jp ON uip.position_name = jp.position_name
+    JOIN Company_Branch cb ON jp.company_id = cb.company_id
+    JOIN State_Area sa ON cb.state_id = sa.state_id
+    JOIN Interview i ON uip.interview_id = i.interview_id
+    WHERE (COALESCE(p_position, '') = '' OR jp.position_name LIKE CONCAT('%', p_position, '%'))
+      AND (COALESCE(p_area, '') = '' OR sa.in_area = p_area)
+      AND (COALESCE(p_state, '') = '' OR sa.state_abbr = p_state)
+      AND (COALESCE(p_industry, '') = '' OR jp.description LIKE CONCAT('%', p_industry, '%'))
+      AND (COALESCE(p_company, '') = '' OR cb.company_name LIKE CONCAT('%', p_company, '%'));
+END //
+
+DELIMITER ;
+
+DELIMITER //
 CREATE PROCEDURE user_record(
     IN r_username VARCHAR(64)
 )
@@ -281,5 +315,6 @@ BEGIN
     WHERE username = r_username;
 END //
 DELIMITER ;
+
 
 

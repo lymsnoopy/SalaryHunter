@@ -1,6 +1,7 @@
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public class controller {
 
@@ -30,7 +31,8 @@ public class controller {
         return model.recordSearch(companyName, stateAbbr, area, industry, position);
     }
     
-    public void executeSearchFromDB(String query, List<String> parameters) throws SQLException {
-        model.executeSearch(query, parameters);
+    public List<Map<String, String>> executeSearchFromDB(String position, String area, String state, String industry, String company) throws SQLException {
+        return model.executeSearch(position, area, state, industry, company);
     }
+
 }
