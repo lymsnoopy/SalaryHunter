@@ -92,7 +92,80 @@ CREATE TABLE IF NOT EXISTS User_Interview_Position (
     FOREIGN KEY (position_name) REFERENCES Job_Position(position_name)
 );
 
-INSERT INTO Registered_User (username, password) VALUES('abc', '123456');
+-- INSERT INTO Registered_User (username, password) VALUES('abc', '123456');
+
+-- Insert Registered Users
+INSERT INTO Registered_User (username, password) VALUES 
+('user1', 'password1'),
+('user2', 'password2'),
+('user3', 'password3');
+
+-- Insert State Area Data
+INSERT INTO State_Area (state_abbr, state_name, in_area) 
+VALUES 
+    ('CA', 'California', 'West'),
+    ('WA', 'Washington', 'West'),
+    ('NV', 'Nevada', 'West'),
+    ('MA', 'Massachusetts', 'Northeast');
+
+-- Insert Company Branches
+INSERT INTO Company_Branch (company_name, state_abbr, industry_name) VALUES 
+('Google', 'CA', 'Technology'),
+('Amazon', 'WA', 'E-Commerce'),
+('Tesla', 'NV', 'Automotive');
+
+-- Insert Job Positions
+INSERT INTO Job_Position (position_name, description, year, salary_amount, company_id) VALUES 
+('Software Engineer 1', 'Develops software.', 2023, 120000.00, 1),
+('Data Scientist', 'Analyzes data.', 2023, 130000.00, 2),
+('Mechanical Engineer', 'Designs machinery.', 2023, 90000.00, 3);
+
+-- Insert Benefits
+INSERT INTO Benefit (benefit_name, benefit_type, position_name) VALUES 
+('Health Insurance', 'Insurance', 'Software Engineer 1'),
+('401k Plan', 'Retirement', 'Data Scientist'),
+('Stock Options', 'Stock', 'Mechanical Engineer');
+
+-- Insert Background Information
+INSERT INTO Background (degree_level, university_name, year_of_work) VALUES 
+('BS', 'Harvard University', '02'),
+('MS', 'Stanford University', '05'),
+('PhD', 'MIT', '08');
+
+-- Insert Skills
+INSERT INTO Skill (skill_name) VALUES 
+('Java'),
+('Python'),
+('C++'),
+('SQL'),
+('Cloud Computing');
+
+-- Insert User Backgrounds
+INSERT INTO User_Background (username, background_id) VALUES 
+('user1', 1),
+('user2', 2),
+('user3', 3);
+
+-- Insert User Skills
+INSERT INTO User_Skill (username, skill_name) VALUES 
+('user1', 'Java'),
+('user1', 'SQL'),
+('user2', 'Python'),
+('user2', 'Cloud Computing'),
+('user3', 'C++'),
+('user3', 'Python');
+
+-- Insert Interviews
+INSERT INTO Interview (interview_type, description) VALUES 
+('Technical Interview', 'Coding questions and problem-solving'),
+('Behavioral Interview', 'Questions about teamwork and leadership'),
+('Online Assessment', 'Timed coding test');
+
+-- Insert User Interview Positions
+INSERT INTO User_Interview_Position (username, interview_id, position_name, has_exprience, got_position) VALUES 
+('user1', 1, 'Software Engineer 1', TRUE, TRUE),
+('user2', 2, 'Data Scientist', TRUE, FALSE),
+('user3', 3, 'Mechanical Engineer', FALSE, FALSE);
 
 INSERT INTO State_Area (state_abbr, state_name, in_area) 
 VALUES 
@@ -147,8 +220,6 @@ VALUES
     ('WI', 'Wisconsin', 'midwest'),
     ('WY', 'Wyoming', 'west');
 
-INSERT INTO Job_Position (position_name, description, year, salary_amount) 
-	VALUES('SoftWare Engineer 1', 'software develop.', 2023, 100000.00);
 
 
 -- DROP FUNCTION IF EXISTS check_user_exist;

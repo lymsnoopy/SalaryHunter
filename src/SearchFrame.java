@@ -94,15 +94,17 @@ public class SearchFrame extends JFrame {
         // Search Button
         JButton searchButton = new JButton("Start Search");
         gbc.gridx = 0;
-        gbc.gridy = 5;
-        gbc.gridwidth = 2;
+        gbc.gridy = 5; // Place it in row 5
+        gbc.gridwidth = 2; // Span across two columns
+        gbc.anchor = GridBagConstraints.CENTER; // Center the button
         panel.add(searchButton, gbc);
 
         // View Record Button
         JButton viewRecordButton = new JButton("View History Record");
         gbc.gridx = 0;
-        gbc.gridy = 5;
-        gbc.gridwidth = 2;
+        gbc.gridy = 6; // Place it in row 6 (below the Search Button)
+        gbc.gridwidth = 2; // Span across two columns
+        gbc.anchor = GridBagConstraints.CENTER; // Center the button
         panel.add(viewRecordButton, gbc);
 
         // Add Action Listener to Search Button
@@ -153,7 +155,7 @@ public class SearchFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 RecordEditedFrame RecordEditedFrame = new RecordEditedFrame(controller, username);
-                RecordEditedFrame.setVisible(true);
+                // RecordEditedFrame.setVisible(true);
             }
         });
 
