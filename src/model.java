@@ -1,3 +1,4 @@
+import java.security.Key;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -5,7 +6,10 @@ import java.sql.JDBCType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class model {
@@ -78,17 +82,84 @@ public class model {
         }   
     }
 
-    public void executeSearch(String query, List<String> parameters) throws SQLException {
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            for (int i = 0; i < parameters.size(); i++) {
-                stmt.setString(i + 1, parameters.get(i));
+    public List<Map<String, String>> executeSearch(String positionName, String area, String stateAbbr, String industryName, String companyBranch) throws SQLException {
+        List<Map<String, String>> results = new ArrayList<>();
+        String sql = "{ CALL GetFilteredRecords(?, ?, ?, ?, ?) }";
+    
+        try (CallableStatement stmt = connection.prepareCall(sql)) {
+            stmt.setString(1, positionName != null && !positionName.isEmpty() ? positionName : null);
+            stmt.setString(2, area != null && !area.isEmpty() ? area : null);
+            stmt.setString(3, stateAbbr != null && !stateAbbr.isEmpty() ? stateAbbr : null);
+            stmt.setString(4, industryName != null && !industryName.isEmpty() ? industryName : null);
+            stmt.setString(5, companyBranch != null && !companyBranch.isEmpty() ? companyBranch : null);
+    
+            System.out.println("Executing stored procedure: " + sql);
+            try (ResultSet rs = stmt.executeQuery()) {
+                System.out.println("Query executed successfully.");
+                while (rs.next()) {
+                    Map<String, String> row = new HashMap<>();
+                    row.put("username", rs.getString("username"));
+                    row.put("companyBranch", rs.getString("companyBranch"));
+                    row.put("stateAbbr", rs.getString("stateAbbr"));
+                    row.put("area", rs.getString("area"));
+                    row.put("positionName", rs.getString("positionName"));
+                    row.put("positionDescription", rs.getString("positionDescription"));
+                    row.put("year", rs.getString("year"));
+                    row.put("salaryAmount", rs.getString("salaryAmount"));
+                    row.put("interviewType", rs.getString("interviewType"));
+                    row.put("interviewDescription", rs.getString("interviewDescription"));
+                    row.put("industryName", rs.getString("industryName"));
+                    results.add(row);
+                }
             }
+        } catch (SQLException e) {
+            System.err.println("Error executing search: " + e.getMessage());
+            throw e;
+        }
+        return results;
+    }
+    
+    public List<Map<String, String>> getInterviews(String username, String positionName) throws SQLException {
+        List<Map<String, String>> results = new ArrayList<>();
+        String sql = "SELECT interview_type AS interviewType, description AS interviewDescription " +
+                     "FROM Interview i JOIN User_Interview_Position uip ON i.interview_id = uip.interview_id " +
+                     "WHERE uip.username = ? AND uip.position_name = ?";
+    
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            stmt.setString(2, positionName);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    System.out.println(rs.getString("company_name"));
+                    Map<String, String> row = new HashMap<>();
+                    row.put("interviewType", rs.getString("interviewType"));
+                    row.put("interviewDescription", rs.getString("interviewDescription"));
+                    results.add(row);
                 }
             }
         }
+        return results;
     }
+    
+    public List<Map<String, String>> getBenefits(String username, String positionName) throws SQLException {
+        List<Map<String, String>> results = new ArrayList<>();
+        String sql = "SELECT benefit_type AS benefitType, benefit_name AS benefitName " +
+                     "FROM Benefit b JOIN User_Interview_Position uip ON b.position_name = uip.position_name " +
+                     "WHERE uip.username = ? AND b.position_name = ?";
+    
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            stmt.setString(2, positionName);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Map<String, String> row = new HashMap<>();
+                    row.put("benefitType", rs.getString("benefitType"));
+                    row.put("benefitName", rs.getString("benefitName"));
+                    results.add(row);
+                }
+            }
+        }
+        return results;
+    }
+    
 
 }

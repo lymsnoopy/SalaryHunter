@@ -14,12 +14,12 @@ CREATE TABLE IF NOT EXISTS State_Area (
 );
 
 CREATE TABLE IF NOT EXISTS Company_Branch (
-	company_id INT AUTO_INCREMENT PRIMARY KEY,
+    company_id INT AUTO_INCREMENT PRIMARY KEY,
     company_name VARCHAR(64) NOT NULL,
     state_abbr CHAR(2) NOT NULL,
     industry_name VARCHAR(64) NOT NULL,
     FOREIGN KEY (state_abbr) REFERENCES State_Area(state_abbr)
-		ON UPDATE CASCADE ON DELETE CASCADE
+        ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Job_Position (
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS Job_Position (
 		ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Benifit (
+CREATE TABLE IF NOT EXISTS Benefit (
     benefit_name VARCHAR(64) PRIMARY KEY,
 	benefit_type ENUM('Insurance', 'Holiday', 'Stock', 'Retirement', 'Family')
 );
@@ -103,6 +103,7 @@ VALUES
     ('b', '456'),
     ('c', '789');
 
+-- Insert State Area Data
 INSERT INTO State_Area (state_abbr, state_name, in_area) 
 VALUES 
     ('AL', 'Alabama', 'South'),
@@ -117,7 +118,7 @@ VALUES
     ('GA', 'Georgia', 'South'),
     ('HI', 'Hawaii', 'West'),
     ('ID', 'Idaho', 'West'),
-    ('IL', 'Illinois', 'MidWest'),
+    ('IL', 'Illinois', 'Midwest'),
     ('IN', 'Indiana', 'Midwest'),
     ('IA', 'Iowa', 'Midwest'),
     ('KS', 'Kansas', 'Midwest'),
@@ -284,3 +285,69 @@ DELIMITER ;
 --     WHERE username = r_username;
 -- END //
 -- DELIMITER ;
+DELIMITER //
+
+CREATE PROCEDURE GetFilteredRecords(
+    IN p_positionName VARCHAR(64),
+    IN p_area VARCHAR(16),
+    IN p_stateAbbr CHAR(2),
+    IN p_industryName VARCHAR(64),
+    IN p_companyBranch VARCHAR(64)
+)
+BEGIN
+    SELECT 
+        uip.username,
+        cb.company_name AS companyBranch,
+        sa.state_abbr AS stateAbbr,
+        sa.in_area AS area,
+        jp.position_name AS positionName,
+        jp.description AS positionDescription,
+        jp.year,
+        jp.salary_amount AS salaryAmount,
+        i.interview_type AS interviewType,
+        i.description AS interviewDescription,
+        cb.industry_name AS industryName
+    FROM 
+        User_Interview_Position uip
+    JOIN 
+        Job_Position jp ON uip.position_name = jp.position_name
+    JOIN 
+        Company_Branch cb ON jp.company_id = cb.company_id
+    JOIN 
+        State_Area sa ON cb.state_abbr = sa.state_abbr
+    JOIN 
+        Interview i ON uip.interview_id = i.interview_id
+    WHERE 
+        (COALESCE(p_positionName, '') = '' OR jp.position_name LIKE CONCAT('%', p_positionName, '%'))
+        AND (COALESCE(p_area, '') = '' OR sa.in_area = p_area)
+        AND (COALESCE(p_stateAbbr, '') = '' OR sa.state_abbr = p_stateAbbr)
+        AND (COALESCE(p_industryName, '') = '' OR cb.industry_name LIKE CONCAT('%', p_industryName, '%'))
+        AND (COALESCE(p_companyBranch, '') = '' OR cb.company_name LIKE CONCAT('%', p_companyBranch, '%'));
+END //
+
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE user_record(
+    IN r_username VARCHAR(64)
+)
+BEGIN
+    SELECT sa.in_area, cb.industry_name, cb.company_name, jp.position_name, jp.description, 
+           jp.year, jp.salary_amount, be.benefit_type, be.benfit_name, ba.degree_level, 
+           ba.year_of_work, sk.skill_name, iv.type, iv.description FROM Registered_User
+        INNER JOIN User_Interview_Position USING username
+        INNER JOIN Interview AS iv USING interview_id
+        INNER JOIN Job_Position AS jp USING position_name
+        INNER JOIN Company_Branch AS cb USING company_id
+        INNER JOIN State_Area AS sa USING state_abbr
+        INNER JOIN Benefit AS be USING position_name
+        INNER JOIN User_Background USING username
+        INNER JOIN Background AS ba USING background_id
+        INNER JOIN User_Skill USING username
+        INNER JOIN Skill AS sk USING skill_name
+    WHERE username = r_username;
+END //
+DELIMITER ;
+
+
+
