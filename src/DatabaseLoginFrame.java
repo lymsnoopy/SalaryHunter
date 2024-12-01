@@ -46,10 +46,10 @@ public class DatabaseLoginFrame extends JFrame {
                         AppLoginFrame appLoginFrame = new AppLoginFrame(controller);
                         appLoginFrame.setVisible(true);
                     } else {
-                    JOptionPane.showMessageDialog(null, "Username or password cannot be null.", "Error", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Username or password cannot be null.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (SQLException er) {
-                    JOptionPane.showMessageDialog(null, er.toString(), "Error", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, er.toString(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

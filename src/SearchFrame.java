@@ -139,8 +139,8 @@ public class SearchFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Open the RecordEditedFrame
-                RecordEditedFrame recordEditedFrame = new RecordEditedFrame(controller, username);
-                // recordEditedFrame.setVisible(true);
+                RecordResultFrame recordResultFrame = new RecordResultFrame(controller, username);
+                recordResultFrame.setVisible(true);
 
                 // Close the current SearchFrame
                 dispose();

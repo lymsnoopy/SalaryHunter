@@ -1,3 +1,4 @@
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -27,6 +28,26 @@ public class controller {
         return model.ShowUserRecord(newUsername);
     }
     
+    public ResultSet DisplayRecordBenefit(int jobID) throws SQLException {
+        return model.ShowUserRecordBenefit(jobID);
+    }
+
+    public ResultSet DisplayRecordInterview(int jobID) throws SQLException {
+        return model.ShowUserRecordInterview(jobID);
+    }
+
+    public ResultSet DisplayRecordSkill(int jobID) throws SQLException {
+        return model.ShowUserRecordSkill(jobID);
+    }
+
+    public void callUpdateRecord(int jobID, String stateAbb, String companyName, String industryName, String positionName, int year, BigDecimal salaryAmount, String description, String degree, int yearOfWork, String universityName) throws SQLException {
+        model.updateRecord(jobID, stateAbb, companyName, industryName, positionName, year, salaryAmount, description, degree, yearOfWork, universityName);
+    }
+
+    public void callDeleteRecord(int jobID) throws SQLException {
+        model.deleteRecord(jobID);
+    }
+
     public boolean recordSearchToDB(String companyName, String stateAbbr, String area, String industry, String position) throws SQLException {
         return model.recordSearch(companyName, stateAbbr, area, industry, position);
     }

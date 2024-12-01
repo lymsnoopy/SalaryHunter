@@ -1,4 +1,4 @@
-import java.security.Key;
+import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -68,7 +68,57 @@ public class model {
         userRecord.setString(1, username); 
         return userRecord.executeQuery();
     }
+
+    public ResultSet ShowUserRecordBenefit(int jobID) throws SQLException {
+        PreparedStatement userRecordBenefit = connection.prepareStatement(
+            "{ CALL record_benefit(?) }"
+        );
+        userRecordBenefit.setInt(1, jobID); 
+        return userRecordBenefit.executeQuery();
+    }
+
+    public ResultSet ShowUserRecordInterview(int jobID) throws SQLException {
+        PreparedStatement userRecordInterview = connection.prepareStatement(
+            "{ CALL record_interview(?) }"
+        );
+        userRecordInterview.setInt(1, jobID); 
+        return userRecordInterview.executeQuery();
+    }
     
+    public ResultSet ShowUserRecordSkill(int jobID) throws SQLException {
+        PreparedStatement userRecordSkill = connection.prepareStatement(
+            "{ CALL record_skill(?) }"
+        );
+        userRecordSkill.setInt(1, jobID); 
+        return userRecordSkill.executeQuery();
+    }
+
+    public void updateRecord(int jobID, String stateAbb, String companyName, String industryName, String positionName, int year, BigDecimal salaryAmount, String description, String degree, int yearOfWork, String universityName) throws SQLException {
+        PreparedStatement recordUpdate = connection.prepareStatement(
+            "{ CALL record_update(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }"
+        );
+        recordUpdate.setInt(1, jobID);
+        recordUpdate.setString(2, stateAbb);
+        recordUpdate.setString(3, companyName);
+        recordUpdate.setString(4, industryName);
+        recordUpdate.setString(5, positionName);
+        recordUpdate.setInt(6, year);
+        recordUpdate.setBigDecimal(7, salaryAmount);
+        recordUpdate.setString(8, description);
+        recordUpdate.setString(9, degree);
+        recordUpdate.setInt(10, yearOfWork);
+        recordUpdate.setString(11, universityName);
+        recordUpdate.executeQuery();
+    }
+
+    public void deleteRecord(int jobID) throws SQLException {
+        PreparedStatement recordDelete = connection.prepareStatement(
+            "{ CALL record_delete(?) }"
+        );
+        recordDelete.setInt(1, jobID);
+        recordDelete.executeQuery();
+    }
+
     public boolean recordSearch(String companyName, String stateAbbr, String area, String industry, String position) throws SQLException {
         try (PreparedStatement recordStmt = connection.prepareStatement(
             "{ CALL InsertSearchRecord(?, ?, ?, ?, ?) }")) {

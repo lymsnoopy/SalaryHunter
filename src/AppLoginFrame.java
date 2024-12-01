@@ -42,7 +42,7 @@ public class AppLoginFrame extends JFrame {
                     if (!username.isEmpty() && !password.isEmpty()) {
                         boolean checkUser = controller.checkUserExist(username);
                         if (!checkUser) {
-                            JOptionPane.showMessageDialog(null, "User not exists. Please register.", "Error", JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "User not exists. Please register.", "Error", JOptionPane.ERROR_MESSAGE);
                         } else {
                             if (controller.checkPassword(username, password)) {
                                 JOptionPane.showMessageDialog(null, "Login Successfully!", "Successfully", JOptionPane.INFORMATION_MESSAGE);
@@ -51,14 +51,14 @@ public class AppLoginFrame extends JFrame {
                                 SearchFrame.setVisible(true);
                             // main page?
                             } else {
-                                JOptionPane.showMessageDialog(null, "Incorrect password. Please try again.", "Error", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "Incorrect password. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
                             }
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Username or password cannot be null.", "Error", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Username or password cannot be null.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (SQLException er) {
-                    JOptionPane.showMessageDialog(null, er.toString(), "Error", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, er.toString(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -73,7 +73,7 @@ public class AppLoginFrame extends JFrame {
                     if (!username.isEmpty() && !password.isEmpty()) {
                         boolean checkUser = controller.checkUserExist(username);
                         if (checkUser) {
-                            JOptionPane.showMessageDialog(null, "User exists. Please login.", "Error", JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "User exists. Please login.", "Error", JOptionPane.ERROR_MESSAGE);
                         } else {
                             boolean addUser = controller.addUserToDB(username, password);
                             if (addUser) {
@@ -81,10 +81,10 @@ public class AppLoginFrame extends JFrame {
                             }
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Username or password cannot be null.", "Error", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Username or password cannot be null.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (SQLException er) {
-                    JOptionPane.showMessageDialog(null, er.toString(), "Error", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, er.toString(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
