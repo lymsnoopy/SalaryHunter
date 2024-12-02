@@ -195,4 +195,32 @@ public class Model {
         return stmt.executeQuery();
     }
 
+    public ResultSet searchCompany() throws SQLException {
+        PreparedStatement searchCompany = connection.prepareStatement(
+            "{ CALL SearchCompany() }"
+        );
+        return searchCompany.executeQuery();
+    }
+
+    public boolean addRate(String username, String CompanyBranch, int rate) throws SQLException {
+        PreparedStatement addRate = connection.prepareStatement(
+            "{ CALL InsertRate(?, ?, ?) }"
+        );
+        addRate.setString(1, username);
+        addRate.setString(2, CompanyBranch);
+        addRate.setInt(3, rate);
+        int update = addRate.executeUpdate();
+        return (update > 0);
+    }
+
+    public BigDecimal displayRate(String CompanyBranch) throws SQLException {
+        CallableStatement checkUser = connection.prepareCall(
+            "{ ? = call DisplayRate(?) }"
+        );
+        checkUser.registerOutParameter(1, java.sql.Types.DECIMAL);
+        checkUser.setString(2, CompanyBranch); 
+        checkUser.execute();
+        BigDecimal averageRate = checkUser.getBigDecimal(1);
+        return averageRate;
+    }
 }

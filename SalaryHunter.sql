@@ -81,11 +81,11 @@ CREATE TABLE IF NOT EXISTS Skill (
 
 CREATE TABLE IF NOT EXISTS User_Rate_Company (
 	username VARCHAR(64),
-    job_id INT,
-    rate INT CHECK (rate > 0 AND rate < 5),
+    company_id INT,
+    rate INT CHECK (rate >= 0 AND rate <= 5),
     FOREIGN KEY (username) REFERENCES Registered_User(username)
 		ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (job_id) REFERENCES Job_Position(job_id)
+    FOREIGN KEY (company_id) REFERENCES Company_Branch(company_id)
 		ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -185,7 +185,13 @@ VALUES
     ('Python', 2),
     ('Machine Learning', 2),
     ('Python', 3);
-
+    
+INSERT INTO User_Rate_Company (username, company_id, rate)
+VALUES 
+    ('a', 1, 4),
+    ('a', 2, 5),
+    ('b', 1, 5),
+    ('b', 2, 4);
 
 -- check if username exists in the database
 DELIMITER //
@@ -392,7 +398,8 @@ BEGIN
 DELETE  FROM Interview WHERE job_id = r_job_id;
 END //
 DELIMITER ;
-    
+
+-- search records
 DELIMITER //
 CREATE PROCEDURE GetFilteredRecords(
 	IN p_in_area VARCHAR(256),
@@ -456,5 +463,43 @@ BEGIN
     PREPARE stmt FROM @sql_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
+END //
+DELIMITER ;
+
+-- select company name
+DELIMITER //
+CREATE PROCEDURE SearchCompany()
+BEGIN
+	SELECT company_name FROM Company_Branch;
+END //
+DELIMITER ;
+
+ -- add new rate
+DELIMITER //
+CREATE PROCEDURE InsertRate(
+	IN p_username VARCHAR(64),
+    IN p_company VARCHAR(64),
+    IN p_rate INT
+)
+BEGIN
+	DECLARE v_company_id INT;
+    SELECT company_id INTO v_company_id FROM Company_Branch WHERE company_name = p_company;
+    INSERT INTO User_Rate_Company(username, company_id, rate)
+    VALUES (p_username, v_company_id, p_rate);
+END //
+DELIMITER ;
+
+-- display average rate
+DELIMITER //
+CREATE FUNCTION DisplayRate(
+	 p_company VARCHAR(64)
+)
+RETURNS DECIMAL(10, 2)
+BEGIN
+	DECLARE v_company_id INT;
+    DECLARE v_avg_rate DECIMAL(10, 2);
+    SELECT company_id INTO v_company_id FROM Company_Branch WHERE company_name = p_company;
+    SELECT AVG(rate) INTO v_avg_rate FROM User_Rate_Company WHERE company_id = v_company_id;
+    RETURN v_avg_rate;
 END //
 DELIMITER ;

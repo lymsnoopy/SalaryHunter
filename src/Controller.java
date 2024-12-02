@@ -160,5 +160,22 @@ public class Controller {
         }
         return results;
     }
+
+    public List<String> searchCompanyList() throws SQLException {
+        List<String> companyNames = new ArrayList<>();
+        ResultSet rs = model.searchCompany();
+        while (rs.next()) {
+            companyNames.add(rs.getString("company_name"));
+        }
+        return companyNames;
+    }
+
+    public boolean addRateToDB(String username, String companyBranch, int rate) throws SQLException {
+        return model.addRate(username, companyBranch, rate);
+    }
+
+    public BigDecimal showRate(String CompanyBranch) throws SQLException {
+        return model.displayRate(CompanyBranch);
+    }
     
 }

@@ -47,15 +47,6 @@ public class SearchFrame extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(scrollPane, gbc);
 
-        // String[] areas = {"", "Northeast", "Midwest", "South", "West"};
-        // JList<String> areaList = new JList<>(areas);
-        // areaList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        // JScrollPane scrollPane = new JScrollPane(areaList);
-        // gbc.gridx = 1;
-        // gbc.gridy = 0;
-        // gbc.fill = GridBagConstraints.HORIZONTAL;
-        // panel.add(scrollPane, gbc);
-
         // State Abbreviation
         JLabel stateAbbrLabel = new JLabel("State Abbreviation:");
         gbc.gridx = 0;
@@ -136,15 +127,6 @@ public class SearchFrame extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(scrollPanes, gbc);
 
-        // String[] degree = {"", "BS", "MS", "PhD"};
-        // JList<String> degreeList = new JList<>(degree);
-        // degreeList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        // JScrollPane scrollPaned = new JScrollPane(degreeList);
-        // gbc.gridx = 1;
-        // gbc.gridy = 6;
-        // gbc.fill = GridBagConstraints.HORIZONTAL;
-        // panel.add(scrollPaned, gbc);
-
         // Univeristy Name
         JLabel universityLabel = new JLabel("University Name:");
         gbc.gridx = 0;
@@ -182,6 +164,14 @@ public class SearchFrame extends JFrame {
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(viewRecordButton, gbc);
+
+        // Rate Button
+        JButton rateButton = new JButton("Rate Company");
+        gbc.gridx = 0;
+        gbc.gridy = 11;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        panel.add(rateButton, gbc);
 
         // Add Action Listener to Search Button
         searchButton.addActionListener(new ActionListener() {
@@ -261,6 +251,19 @@ public class SearchFrame extends JFrame {
                 // Open the RecordResultFrame
                 RecordResultFrame recordResultFrame = new RecordResultFrame(controller, username);
                 recordResultFrame.setVisible(true);
+
+                // Close the current SearchFrame
+                dispose();
+            }
+        });
+
+        // Add Action Listener to Rate Button
+        rateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Open the RateFrame
+                RateFrame rateFrame = new RateFrame(controller, username);
+                rateFrame.setVisible(true);
 
                 // Close the current SearchFrame
                 dispose();
