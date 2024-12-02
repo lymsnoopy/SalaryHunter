@@ -1,12 +1,12 @@
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
-public class BenefitDetailsFrame extends JFrame {
+public class SearchBenefitFrame extends JFrame {
 
-    public BenefitDetailsFrame(List<Map<String, String>> benefitDetails) {
+    public SearchBenefitFrame(Controller controller, List<Map<String, String>> benefitDetails, int job_id) {
         setTitle("Benefit Details");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -32,9 +32,9 @@ public class BenefitDetailsFrame extends JFrame {
 
         // Create the table
         JTable table = new JTable(tableModel);
-        table.setEnabled(false); // Disable editing
-
+        table.setEnabled(false); 
+        
         // Add table to the frame inside a scroll pane
         add(new JScrollPane(table), BorderLayout.CENTER);
     }
-}
+}   

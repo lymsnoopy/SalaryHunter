@@ -316,43 +316,145 @@ BEGIN
 DELETE  FROM Job_Position WHERE job_id = r_job_id;
 END //
 DELIMITER ;
+
+-- benefit update
+DELIMITER //
+CREATE PROCEDURE benefit_update (
+	IN r_job_id INT,
+    IN r_benefit_type ENUM('Insurance', 'Holiday', 'Stock', 'Retirement', 'Family'),
+    IN r_benefit_name VARCHAR(64)
+)
+BEGIN
+	UPDATE Benefit
+    SET benefit_name = r_benefit_name, benefit_type = r_benefit_type
+    WHERE job_id = r_job_id;
+END //
+DELIMITER ;
+
+-- benefit delete 
+DELIMITER //
+CREATE PROCEDURE benefit_delete (
+	IN r_job_id INT
+)
+BEGIN
+DELETE  FROM Benefit WHERE job_id = r_job_id;
+END //
+DELIMITER ;
+
+-- skill update
+DELIMITER //
+CREATE PROCEDURE skill_update (
+	IN r_job_id INT,
+    IN r_skill_name VARCHAR(64)
+)
+BEGIN
+	UPDATE Skill
+    SET skill_name = r_skill_name
+    WHERE job_id = r_job_id;
+END //
+DELIMITER ;
+
+-- skill delete 
+DELIMITER //
+CREATE PROCEDURE skill_delete (
+	IN r_job_id INT
+)
+BEGIN
+DELETE  FROM Skill WHERE job_id = r_job_id;
+END //
+DELIMITER ;
+
+-- interview update
+DELIMITER //
+CREATE PROCEDURE interview_update (
+	IN r_job_id INT,
+    IN r_interview_type ENUM (
+		'Online Assessment', 
+        'Pre-Recorded Interview', 
+        'Behavioral Interview', 
+        'Technical Interview', 
+		'Supervisor Interview'),
+	IN r_description VARCHAR(500)
+)
+BEGIN
+	UPDATE Interview
+    SET interview_type = r_interview_type, description = r_description
+    WHERE job_id = r_job_id;
+END //
+DELIMITER ;
+
+-- interview delete 
+DELIMITER //
+CREATE PROCEDURE interview_delete (
+	IN r_job_id INT
+)
+BEGIN
+DELETE  FROM Interview WHERE job_id = r_job_id;
+END //
+DELIMITER ;
     
--- DELIMITER //
--- CREATE PROCEDURE GetFilteredRecords(
---     IN p_positionName VARCHAR(64),
---     IN p_area VARCHAR(16),
---     IN p_stateAbbr CHAR(2),
---     IN p_industryName VARCHAR(64),
---     IN p_companyBranch VARCHAR(64)
--- )
--- BEGIN
---     SELECT 
---         uip.username,
---         cb.company_name AS companyBranch,
---         sa.state_abbr AS stateAbbr,
---         sa.in_area AS area,
---         jp.position_name AS positionName,
---         jp.description AS positionDescription,
---         jp.year,
---         jp.salary_amount AS salaryAmount,
---         i.interview_type AS interviewType,
---         i.description AS interviewDescription,
---         cb.industry_name AS industryName
---     FROM 
---         User_Interview_Position uip
---     JOIN 
---         Job_Position jp ON uip.position_name = jp.position_name
---     JOIN 
---         Company_Branch cb ON jp.company_id = cb.company_id
---     JOIN 
---         State_Area sa ON cb.state_abbr = sa.state_abbr
---     JOIN 
---         Interview i ON uip.interview_id = i.interview_id
---     WHERE 
---         (COALESCE(p_positionName, '') = '' OR jp.position_name LIKE CONCAT('%', p_positionName, '%'))
---         AND (COALESCE(p_area, '') = '' OR sa.in_area = p_area)
---         AND (COALESCE(p_stateAbbr, '') = '' OR sa.state_abbr = p_stateAbbr)
---         AND (COALESCE(p_industryName, '') = '' OR cb.industry_name LIKE CONCAT('%', p_industryName, '%'))
---         AND (COALESCE(p_companyBranch, '') = '' OR cb.company_name LIKE CONCAT('%', p_companyBranch, '%'));
--- END //
--- DELIMITER ;
+DELIMITER //
+CREATE PROCEDURE GetFilteredRecords(
+	IN p_in_area VARCHAR(256),
+    IN p_stateAbbr CHAR(2),
+    IN p_industryName VARCHAR(64),
+    IN p_companyName VARCHAR(64),
+    IN p_positionName VARCHAR(64),
+    IN p_year INT,
+    IN p_degree_level VARCHAR(20),
+	IN p_university_name VARCHAR(64),
+    IN p_year_of_work INT
+)
+BEGIN
+    SET @sql_query = 'SELECT sa.in_area, cb.state_abbr, cb.industry_name,  cb.company_name, 
+									  jp.job_id, jp.position_name,  jp.year, jp.salary_amount, jp.description, ba.degree_level, 
+                                      ba.year_of_work, ba.university_name FROM Job_Position AS jp
+                                      INNER JOIN Company_Branch AS cb USING (company_id)
+                                      INNER JOIN State_Area AS sa USING (state_abbr) 
+                                      INNER JOIN Background AS ba USING (job_id)
+                                      WHERE 1=1';
+	IF p_in_area IS NOT NULL AND p_in_area != '' THEN
+        SET @sql_query = CONCAT(@sql_query, ' AND sa.in_area IN (', p_in_area, ')');
+	ELSE
+		SET @sql_query = CONCAT(@sql_query, ' AND sa.in_area != ""');
+    END IF;
+
+    IF p_stateAbbr IS NOT NULL AND p_stateAbbr != '' THEN
+        SET @sql_query = CONCAT(@sql_query, ' AND cb.state_abbr = "', p_stateAbbr, '"');
+    END IF;
+
+    IF p_industryName IS NOT NULL AND p_industryName != '' THEN
+        SET @sql_query = CONCAT(@sql_query, ' AND cb.industry_name = "',  p_industryName, '"');
+    END IF;
+
+    IF p_companyName IS NOT NULL AND p_companyName != '' THEN
+        SET @sql_query = CONCAT(@sql_query, ' AND cb.company_name = "', p_companyName, '"');
+    END IF;
+
+    IF p_positionName IS NOT NULL AND p_positionName != '' THEN
+        SET @sql_query = CONCAT(@sql_query, ' AND jp.position_name = "', p_positionName, '"');
+    END IF;
+
+    IF p_year IS NOT NULL THEN
+        SET @sql_query = CONCAT(@sql_query, ' AND jp.year = ', p_year);
+    END IF;
+
+    IF p_degree_level IS NOT NULL AND p_degree_level != '' THEN
+        SET @sql_query = CONCAT(@sql_query, ' AND ba.degree_level IN (', p_degree_level, ')');
+	ELSE
+    SET @sql_query = CONCAT(@sql_query, ' AND ba.degree_level != ""');
+    END IF;
+
+    IF p_university_name IS NOT NULL AND p_university_name != '' THEN
+        SET @sql_query = CONCAT(@sql_query, ' AND ba.university_name = "', p_university_name, '"');
+    END IF;
+
+    IF p_year_of_work IS NOT NULL THEN
+        SET @sql_query = CONCAT(@sql_query, ' AND ba.year_of_work = ', p_year_of_work);
+    END IF;
+    
+    PREPARE stmt FROM @sql_query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END //
+DELIMITER ;

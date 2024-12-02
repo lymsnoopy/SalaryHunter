@@ -16,16 +16,16 @@ public class RecordResultFrame extends JFrame {
     private boolean isUpdateMode = false;
     private int currentRow = -1;
 
-    public RecordResultFrame(controller controller, String username) {
+    public RecordResultFrame(Controller controller, String username) {
         setTitle("User Record");
-        setSize(1500, 1000);
+        setSize(2000, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
         try {
             ResultSet rs = controller.DisplayRecord(username);
             if (!rs.isBeforeFirst()) {
-                JOptionPane.showMessageDialog(null, "You have no record.", "Message", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(RecordResultFrame.this, "You have no record.", "Message", JOptionPane.ERROR_MESSAGE);
             }
             while (rs.next()) {
                     Map<String, String> row = new HashMap<>();
@@ -44,7 +44,7 @@ public class RecordResultFrame extends JFrame {
                     results.add(row);
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(RecordResultFrame.this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         // Define column names
@@ -86,7 +86,7 @@ public class RecordResultFrame extends JFrame {
                 "Update",  // For "Update" button
                 "Save",  // For "Save" button
                 "Cancel",  // For "Cancel" button
-                "Delete",  // For "Delete" button
+                "Delete"  // For "Delete" button
             });
         }
 
@@ -118,20 +118,20 @@ public class RecordResultFrame extends JFrame {
         // Add table to the frame
         add(new JScrollPane(table), BorderLayout.CENTER);
 
-        // // Back button
-        // JPanel buttonPanel = new JPanel();
-        // JButton backButton = new JButton("Back to Search");
-        // backButton.addActionListener(e -> {
-        //     dispose();
-        //     SearchFrame searchFrame = new SearchFrame(controller, username);
-        //     searchFrame.setVisible(true);
-        // });
-        // buttonPanel.add(backButton);
+        // Back button
+        JPanel buttonPanel = new JPanel();
+        JButton backButton = new JButton("Back to Search");
+        backButton.addActionListener(e -> {
+            dispose();
+            SearchFrame searchFrame = new SearchFrame(controller, username);
+            searchFrame.setVisible(true);
+        });
+        buttonPanel.add(backButton);
 
-        // add(buttonPanel, BorderLayout.SOUTH);
+        add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    // ButtonRenderer class for rendering the "View Details" button
+    // ButtonRenderer class for rendering the button
     private static class ButtonRenderer extends JButton implements TableCellRenderer {
         public ButtonRenderer() {
             setOpaque(true);
@@ -149,7 +149,7 @@ public class RecordResultFrame extends JFrame {
         private final JButton button;
 
    
-        public ButtonEditor(controller controller, JTable table, DefaultTableModel tableModel, String type) {
+        public ButtonEditor(Controller controller, JTable table, DefaultTableModel tableModel, String type) {
             button = new JButton();
             button.setOpaque(true);
             button.addActionListener(e -> {
@@ -187,16 +187,16 @@ public class RecordResultFrame extends JFrame {
                             String universityName = (String) tableModel.getValueAt(selectedRow, 10);
                             if (stateAbb.isEmpty() || companyName.isEmpty() || industryName.isEmpty() || positionName.isEmpty() 
                                 || description.isEmpty() || degree.isEmpty() || universityName.isEmpty()) {
-                                    JOptionPane.showMessageDialog(null, "Field can not be empty", "Error", JOptionPane.ERROR_MESSAGE);
+                                    JOptionPane.showMessageDialog(RecordResultFrame.this, "Field can not be empty!", "Error", JOptionPane.ERROR_MESSAGE);
                                 }
                             controller.callUpdateRecord(jobID, stateAbb, companyName, industryName, positionName, year, salaryAmount, description, degree, yearOfWork, universityName);
                             isUpdateMode = false;
                             tableModel.fireTableDataChanged();
-                            JOptionPane.showMessageDialog(null, "Update successfully", "Update Message", JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(RecordResultFrame.this, "Update successfully!", "Update Message", JOptionPane.INFORMATION_MESSAGE);
                         } catch (SQLException ex) {
-                            JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(RecordResultFrame.this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
                         } catch (NumberFormatException en) {
-                            JOptionPane.showMessageDialog(null, en.toString(), "Number Exception", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(RecordResultFrame.this, en.toString(), "Number Exception", JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 } else if (type.equals("Cancel")) {
@@ -210,8 +210,9 @@ public class RecordResultFrame extends JFrame {
                             controller.callDeleteRecord(jobID);
                             tableModel.removeRow(selectedRow);
                             tableModel.fireTableRowsDeleted(selectedRow, selectedRow);
+                            JOptionPane.showMessageDialog(RecordResultFrame.this, "Delete successfully!", "Update Message", JOptionPane.INFORMATION_MESSAGE);
                         } catch (SQLException ex) {
-                            JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(RecordResultFrame.this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 }
@@ -236,10 +237,10 @@ public class RecordResultFrame extends JFrame {
     }
 
     // PersistentButtonEditor class for handling "View Details" button clicks without disappearing
-    private static class PersistentButtonEditor extends AbstractCellEditor implements TableCellEditor {
+    private class PersistentButtonEditor extends AbstractCellEditor implements TableCellEditor {
         private JButton button;
     
-        public PersistentButtonEditor(controller controller, String type) {
+        public PersistentButtonEditor(Controller controller, String type) {
             button = new JButton();
             button.setOpaque(true);
     
@@ -255,7 +256,7 @@ public class RecordResultFrame extends JFrame {
                             rowb.put("benefitName", rsb.getString("benefit_name"));
                             benefit.add(rowb);
                         }
-                        new BenefitDetailsFrame(benefit).setVisible(true); // Display benefit frame
+                        new RecordBenefitFrame(controller, benefit, jobID).setVisible(true); // Display benefit frame
                     } else if (type.equals("interview")) {
                         List<Map<String, String>> interview = new ArrayList<>();
                         ResultSet rsi = controller.DisplayRecordInterview(jobID);
@@ -265,7 +266,7 @@ public class RecordResultFrame extends JFrame {
                             rowi.put("interviewDescription", rsi.getString("description"));
                             interview.add(rowi);
                         }
-                        new InterviewDetailsFrame(interview).setVisible(true); // Display interview frame
+                        new RecordInterviewFrame(controller, interview, jobID).setVisible(true); // Display interview frame
                     } else if (type.equals("skill")) {
                         List<Map<String, String>> skill = new ArrayList<>();
                         ResultSet rss = controller.DisplayRecordSkill(jobID);
@@ -274,10 +275,10 @@ public class RecordResultFrame extends JFrame {
                             rows.put("skillName", rss.getString("skill_name"));
                             skill.add(rows);
                         }
-                        new SkillDetailsFrame(skill).setVisible(true); // Display skill frame
+                        new RecordSkillFrame(controller, skill, jobID).setVisible(true); // Display skill frame
                     }
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(RecordResultFrame.this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             
             });
