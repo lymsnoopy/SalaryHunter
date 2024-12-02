@@ -26,20 +26,61 @@ public class Controller {
         return model.addUser(newUsername, newPassword);
     }
 
-    public ResultSet DisplayRecord(String newUsername) throws SQLException {
-        return model.ShowUserRecord(newUsername);
+    public List<Map<String, String>> DisplayRecord(String newUsername) throws SQLException {
+        List<Map<String, String>> results = new ArrayList<>();
+        ResultSet rs = model.ShowUserRecord(newUsername);
+        while (rs.next()) {
+            Map<String, String> row = new HashMap<>();
+            row.put("state_abbr", rs.getString("state_abbr"));
+            row.put("company_name", rs.getString("company_name"));
+            row.put("industry_name", rs.getString("industry_name"));
+            row.put("job_id", rs.getString("job_id"));
+            row.put("position_name", rs.getString("position_name"));
+            row.put("year", rs.getString("year"));
+            row.put("salary_amount", rs.getString("salary_amount"));
+            row.put("description", rs.getString("description"));
+            row.put("degree_level", rs.getString("degree_level"));
+            row.put("year_of_work", rs.getString("year_of_work"));
+            row.put("university_name", rs.getString("university_name"));
+
+            results.add(row);
+        }
+        return results;
     }
     
-    public ResultSet DisplayRecordBenefit(int jobID) throws SQLException {
-        return model.ShowUserRecordBenefit(jobID);
+    public List<Map<String, String>> DisplayRecordBenefit(int jobID) throws SQLException {
+        List<Map<String, String>> benefit = new ArrayList<>();
+        ResultSet rsb = model.ShowUserRecordBenefit(jobID);
+        while (rsb.next()) {
+            Map<String, String> rowb = new HashMap<>();
+            rowb.put("benefitType", rsb.getString("benefit_type"));
+            rowb.put("benefitName", rsb.getString("benefit_name"));
+            benefit.add(rowb);
+        }
+        return benefit;
     }
 
-    public ResultSet DisplayRecordInterview(int jobID) throws SQLException {
-        return model.ShowUserRecordInterview(jobID);
+    public List<Map<String, String>> DisplayRecordInterview(int jobID) throws SQLException {
+        List<Map<String, String>> interview = new ArrayList<>();
+        ResultSet rsi = model.ShowUserRecordInterview(jobID);
+        while (rsi.next()) {
+            Map<String, String> rowi = new HashMap<>();
+            rowi.put("interviewType", rsi.getString("interview_type"));
+            rowi.put("interviewDescription", rsi.getString("description"));
+            interview.add(rowi);
+        }
+        return interview;
     }
 
-    public ResultSet DisplayRecordSkill(int jobID) throws SQLException {
-        return model.ShowUserRecordSkill(jobID);
+    public List<Map<String, String>> DisplayRecordSkill(int jobID) throws SQLException {
+        List<Map<String, String>> skill = new ArrayList<>();
+        ResultSet rss = model.ShowUserRecordSkill(jobID);
+        while (rss.next()) {
+            Map<String, String> rows = new HashMap<>();
+            rows.put("skillName", rss.getString("skill_name"));
+            skill.add(rows);
+        }
+        return skill;
     }
 
     public void callUpdateRecord(int jobID, String stateAbb, String companyName, String industryName, String positionName, int year, BigDecimal salaryAmount, String description, String degree, int yearOfWork, String universityName) throws SQLException {
@@ -74,10 +115,6 @@ public class Controller {
         model.deleteInterview(jobID);
     }
 
-    // public boolean recordSearchToDB(String companyName, String stateAbbr, String area, String industry, String position) throws SQLException {
-    //     return model.recordSearch(companyName, stateAbbr, area, industry, position);
-    // }
-    
     public List<Map<String, String>> executeSearchFromDB(
         String area, String stateAbbr, String industryName, String companyBranch, String positionName, 
         Integer year, String degree, String universityName, Integer yearOfWork) throws SQLException {

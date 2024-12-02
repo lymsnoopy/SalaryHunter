@@ -414,7 +414,7 @@ BEGIN
                                       INNER JOIN Background AS ba USING (job_id)
                                       WHERE 1=1';
 	IF p_in_area IS NOT NULL AND p_in_area != '' THEN
-        SET @sql_query = CONCAT(@sql_query, ' AND sa.in_area IN (', p_in_area, ')');
+        SET @sql_query = CONCAT(@sql_query, ' AND (sa.in_area = "', REPLACE(p_in_area, ',', '" OR sa.in_area = "'), '" )');
 	ELSE
 		SET @sql_query = CONCAT(@sql_query, ' AND sa.in_area != ""');
     END IF;
@@ -440,7 +440,7 @@ BEGIN
     END IF;
 
     IF p_degree_level IS NOT NULL AND p_degree_level != '' THEN
-        SET @sql_query = CONCAT(@sql_query, ' AND ba.degree_level IN (', p_degree_level, ')');
+        SET @sql_query = CONCAT(@sql_query, ' AND (ba.degree_level = "', REPLACE(p_degree_level, ',', '" OR ba.degree_level = "'), '" )');
 	ELSE
     SET @sql_query = CONCAT(@sql_query, ' AND ba.degree_level != ""');
     END IF;

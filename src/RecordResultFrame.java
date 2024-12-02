@@ -1,9 +1,7 @@
 import java.awt.*;
 import java.math.BigDecimal;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.*;
@@ -23,25 +21,9 @@ public class RecordResultFrame extends JFrame {
         setLocationRelativeTo(null);
 
         try {
-            ResultSet rs = controller.DisplayRecord(username);
-            if (!rs.isBeforeFirst()) {
+            results = controller.DisplayRecord(username);
+            if (results.isEmpty() || results == null) {
                 JOptionPane.showMessageDialog(RecordResultFrame.this, "You have no record.", "Message", JOptionPane.ERROR_MESSAGE);
-            }
-            while (rs.next()) {
-                    Map<String, String> row = new HashMap<>();
-                    row.put("state_abbr", rs.getString("state_abbr"));
-                    row.put("company_name", rs.getString("company_name"));
-                    row.put("industry_name", rs.getString("industry_name"));
-                    row.put("job_id", rs.getString("job_id"));
-                    row.put("position_name", rs.getString("position_name"));
-                    row.put("year", rs.getString("year"));
-                    row.put("salary_amount", rs.getString("salary_amount"));
-                    row.put("description", rs.getString("description"));
-                    row.put("degree_level", rs.getString("degree_level"));
-                    row.put("year_of_work", rs.getString("year_of_work"));
-                    row.put("university_name", rs.getString("university_name"));
-
-                    results.add(row);
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(RecordResultFrame.this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -248,33 +230,13 @@ public class RecordResultFrame extends JFrame {
                 int jobID = Integer.parseInt(button.getClientProperty("job_id").toString());
                 try {
                     if (type.equals("benefit")) {
-                        List<Map<String, String>> benefit = new ArrayList<>();
-                        ResultSet rsb = controller.DisplayRecordBenefit(jobID);
-                        while (rsb.next()) {
-                            Map<String, String> rowb = new HashMap<>();
-                            rowb.put("benefitType", rsb.getString("benefit_type"));
-                            rowb.put("benefitName", rsb.getString("benefit_name"));
-                            benefit.add(rowb);
-                        }
+                        List<Map<String, String>> benefit = controller.DisplayRecordBenefit(jobID);
                         new RecordBenefitFrame(controller, benefit, jobID).setVisible(true); // Display benefit frame
                     } else if (type.equals("interview")) {
-                        List<Map<String, String>> interview = new ArrayList<>();
-                        ResultSet rsi = controller.DisplayRecordInterview(jobID);
-                        while (rsi.next()) {
-                            Map<String, String> rowi = new HashMap<>();
-                            rowi.put("interviewType", rsi.getString("interview_type"));
-                            rowi.put("interviewDescription", rsi.getString("description"));
-                            interview.add(rowi);
-                        }
+                        List<Map<String, String>> interview = controller.DisplayRecordInterview(jobID);
                         new RecordInterviewFrame(controller, interview, jobID).setVisible(true); // Display interview frame
                     } else if (type.equals("skill")) {
-                        List<Map<String, String>> skill = new ArrayList<>();
-                        ResultSet rss = controller.DisplayRecordSkill(jobID);
-                        while (rss.next()) {
-                            Map<String, String> rows = new HashMap<>();
-                            rows.put("skillName", rss.getString("skill_name"));
-                            skill.add(rows);
-                        }
+                        List<Map<String, String>> skill = controller.DisplayRecordSkill(jobID);
                         new RecordSkillFrame(controller, skill, jobID).setVisible(true); // Display skill frame
                     }
                 } catch (SQLException ex) {

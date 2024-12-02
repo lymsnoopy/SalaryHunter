@@ -168,19 +168,6 @@ public class Model {
         interviewDelete.executeQuery();
     }
 
-    // public boolean recordSearch(String companyName, String stateAbbr, String area, String industry, String position) throws SQLException {
-    //     try (PreparedStatement recordStmt = connection.prepareStatement(
-    //         "{ CALL InsertSearchRecord(?, ?, ?, ?, ?) }")) {
-    //         recordStmt.setString(1, companyName);
-    //         recordStmt.setString(2, stateAbbr);
-    //         recordStmt.setString(3, area);
-    //         recordStmt.setString(4, industry);
-    //         recordStmt.setString(5, position);
-    //         int update = recordStmt.executeUpdate();
-    //         return (update > 0);
-    //     }   
-    // }
-
     public ResultSet executeSearch(
         String area, String stateAbbr, String industryName, String companyBranch, String positionName, 
         Integer year, String degree, String universityName, Integer yearOfWork) throws SQLException {

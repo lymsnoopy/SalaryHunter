@@ -198,7 +198,6 @@ public class SearchFrame extends JFrame {
                     }
                 }
                 String area = selectedAreas.toString();
-                
                 // stateAbbr
                 String stateAbbr = stateAbbrField.getText();
 
