@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS State_Area (
 
 CREATE TABLE IF NOT EXISTS Company_Branch (
     company_id INT AUTO_INCREMENT PRIMARY KEY,
-    company_name VARCHAR(64) NOT NULL,
+    company_name VARCHAR(64) UNIQUE NOT NULL,
     state_abbr CHAR(2) NOT NULL,
     industry_name VARCHAR(64) NOT NULL,
     FOREIGN KEY (state_abbr) REFERENCES State_Area(state_abbr)

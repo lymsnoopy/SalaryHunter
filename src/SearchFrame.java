@@ -173,6 +173,22 @@ public class SearchFrame extends JFrame {
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(rateButton, gbc);
 
+        // Add button
+        JButton addButton = new JButton("Add New Record");
+        gbc.gridx = 0;
+        gbc.gridy = 12;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        panel.add(addButton, gbc);
+
+        // Exit button
+        JButton exitButton = new JButton("Exit");
+        gbc.gridx = 0;
+        gbc.gridy = 13;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        panel.add(exitButton, gbc);
+
         // Add Action Listener to Search Button
         searchButton.addActionListener(new ActionListener() {
             @Override
@@ -269,6 +285,18 @@ public class SearchFrame extends JFrame {
                 dispose();
             }
         });
+
+        // Add Action Listener to Exit button
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    controller.exit();
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(SearchFrame.this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            });
 
         // Add panel to frame
         add(panel);

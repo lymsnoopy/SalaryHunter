@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -102,7 +104,7 @@ public class RecordResultFrame extends JFrame {
 
         // Back button
         JPanel buttonPanel = new JPanel();
-        JButton backButton = new JButton("Back to Search");
+        JButton backButton = new JButton("Back to Main Page");
         backButton.addActionListener(e -> {
             dispose();
             SearchFrame searchFrame = new SearchFrame(controller, username);
@@ -110,12 +112,27 @@ public class RecordResultFrame extends JFrame {
         });
         buttonPanel.add(backButton);
 
+        // Exit button
+        JButton exitButton = new JButton("Exit");
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    controller.exit();
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(RecordResultFrame.this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            });
+        buttonPanel.add(exitButton);
+
+        // Add button
         JButton addRecordButton = new JButton("Add New Record");
-        addRecordButton.addActionListener(e -> {
-            dispose();
-            AddRecordFrame addRecordFrame = new AddRecordFrame(controller, username);
-            addRecordFrame.setVisible(true);
-        });
+        // addRecordButton.addActionListener(e -> {
+        //     dispose();
+        //     AddRecordFrame addRecordFrame = new AddRecordFrame(controller, username);
+        //     addRecordFrame.setVisible(true);
+        // });
         buttonPanel.add(addRecordButton);
         
         add(buttonPanel, BorderLayout.SOUTH);

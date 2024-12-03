@@ -123,6 +123,7 @@ public class RecordBenefitFrame extends JFrame {
                             tableModel.removeRow(selectedRow);
                             tableModel.fireTableRowsDeleted(selectedRow, selectedRow);
                             JOptionPane.showMessageDialog(RecordBenefitFrame.this, "Delete successfully!", "Update Message", JOptionPane.INFORMATION_MESSAGE);
+                            tableModel.fireTableDataChanged();
                         } catch (SQLException ex) {
                             JOptionPane.showMessageDialog(RecordBenefitFrame.this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
                         }

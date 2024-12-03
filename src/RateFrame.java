@@ -66,25 +66,29 @@ public class RateFrame extends JFrame {
                 String companyBranch = (String) companyComboBox.getSelectedItem();
                 String rates = rateField.getText();
                 int rate = -1;
-                if (!companyBranch.isEmpty() && !rates.isEmpty()) {
-                    rate = Integer.parseInt(rates);
-                    if (rate < 0 || rate > 5) {
-                        JOptionPane.showMessageDialog(RateFrame.this, "Rate should be between 0 - 5", "Error", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        try {
-                            boolean update = controller.addRateToDB(username, companyBranch, rate);
-                            if (update) {
-                                BigDecimal averageRate = controller.showRate(companyBranch);
-                                JOptionPane.showMessageDialog(
-                                    RateFrame.this, 
-                                    "Rate Successfully!\nThe average rate of company " + companyBranch + " is " + averageRate + " .", 
-                                    "Rate", JOptionPane.INFORMATION_MESSAGE
-                                );
+                if (!rates.isEmpty()) {
+                    try {
+                        rate = Integer.parseInt(rates);
+                        if (rate >= 0 && rate <= 5) {
+                            try {
+                                boolean update = controller.addRateToDB(username, companyBranch, rate);
+                                if (update) {
+                                    BigDecimal averageRate = controller.showRate(companyBranch);
+                                    JOptionPane.showMessageDialog(
+                                        RateFrame.this, 
+                                        "Rate Successfully!\nThe average rate of company " + companyBranch + " is " + averageRate + " .", 
+                                        "Rate", JOptionPane.INFORMATION_MESSAGE
+                                    );
+                                }
+                            } catch (SQLException ex) {
+                                JOptionPane.showMessageDialog(RateFrame.this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
                             }
-                        } catch (SQLException ex) {
-                            JOptionPane.showMessageDialog(RateFrame.this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(RateFrame.this, "Rate should be number between 0 - 5", "Error", JOptionPane.ERROR_MESSAGE);
                         }
-                    }
+                    } catch (NumberFormatException  en) {
+                        JOptionPane.showMessageDialog(RateFrame.this, "Rate should be number between 0 - 5", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                    }  
                 } else {
                     JOptionPane.showMessageDialog(RateFrame.this, "Field cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -93,13 +97,27 @@ public class RateFrame extends JFrame {
 
         // Back button
         JPanel buttonPanel = new JPanel();
-        JButton backButton = new JButton("Back to Search");
+        JButton backButton = new JButton("Back to Main Page");
         backButton.addActionListener(e -> {
             dispose();
             SearchFrame searchFrame = new SearchFrame(controller, username);
             searchFrame.setVisible(true);
         });
         buttonPanel.add(backButton);
+
+        // Exit button
+        JButton exitButton = new JButton("Exit");
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    controller.exit();
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(RateFrame.this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            });
+        buttonPanel.add(exitButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
         

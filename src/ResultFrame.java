@@ -6,6 +6,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ResultFrame extends JFrame {
 
@@ -74,13 +76,27 @@ public class ResultFrame extends JFrame {
 
         // Back button
         JPanel buttonPanel = new JPanel();
-        JButton backButton = new JButton("Back to Search");
+        JButton backButton = new JButton("Back to Main Page");
         backButton.addActionListener(e -> {
             dispose();
             SearchFrame searchFrame = new SearchFrame(controller, username);
             searchFrame.setVisible(true);
         });
         buttonPanel.add(backButton);
+
+        // Exit button
+        JButton exitButton = new JButton("Exit");
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    controller.exit();
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(ResultFrame.this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            });
+        buttonPanel.add(exitButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
     }

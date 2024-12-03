@@ -177,5 +177,8 @@ public class Controller {
     public BigDecimal showRate(String CompanyBranch) throws SQLException {
         return model.displayRate(CompanyBranch);
     }
-    
+
+    public void exit() throws SQLException {
+        model.disconnect();
+    }
 }

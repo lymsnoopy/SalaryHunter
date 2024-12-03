@@ -223,4 +223,11 @@ public class Model {
         BigDecimal averageRate = checkUser.getBigDecimal(1);
         return averageRate;
     }
+
+    public void disconnect() throws SQLException {
+        if (this.connection != null && !this.connection.isClosed()) {
+            this.connection.close();
+            System.exit(0);
+        }
+    }
 }
