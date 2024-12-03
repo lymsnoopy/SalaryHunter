@@ -110,6 +110,14 @@ public class RecordResultFrame extends JFrame {
         });
         buttonPanel.add(backButton);
 
+        JButton addRecordButton = new JButton("Add New Record");
+        addRecordButton.addActionListener(e -> {
+            dispose();
+            AddRecordFrame addRecordFrame = new AddRecordFrame(controller, username);
+            addRecordFrame.setVisible(true);
+        });
+        buttonPanel.add(addRecordButton);
+        
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
