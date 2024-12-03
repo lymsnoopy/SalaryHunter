@@ -218,6 +218,7 @@ public class RecordResultFrame extends JFrame {
                             tableModel.removeRow(selectedRow);
                             tableModel.fireTableRowsDeleted(selectedRow, selectedRow);
                             JOptionPane.showMessageDialog(RecordResultFrame.this, "Delete successfully!", "Update Message", JOptionPane.INFORMATION_MESSAGE);
+                            tableModel.fireTableDataChanged();
                         } catch (SQLException ex) {
                             JOptionPane.showMessageDialog(RecordResultFrame.this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
                         }

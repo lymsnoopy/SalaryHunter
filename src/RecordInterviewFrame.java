@@ -123,6 +123,7 @@ public class RecordInterviewFrame extends JFrame {
                             tableModel.removeRow(selectedRow);
                             tableModel.fireTableRowsDeleted(selectedRow, selectedRow);
                             JOptionPane.showMessageDialog(RecordInterviewFrame.this, "Delete successfully!", "Update Message", JOptionPane.INFORMATION_MESSAGE);
+                            tableModel.fireTableDataChanged();
                         } catch (SQLException ex) {
                             JOptionPane.showMessageDialog(RecordInterviewFrame.this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
                         }
