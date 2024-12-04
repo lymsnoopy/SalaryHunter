@@ -53,10 +53,31 @@ public class SearchFrame extends JFrame {
         gbc.gridy = 1;
         panel.add(stateAbbrLabel, gbc);
 
-        JTextField stateAbbrField = new JTextField(20);
+        // Create JCheckBox for each state abbreviation
+        String[] stateAbbrs = {
+            "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", 
+            "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", 
+            "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", 
+            "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", 
+            "WI", "WY", "DC"
+        };
+        JPanel stateAbbrPanel = new JPanel();
+        stateAbbrPanel.setLayout(new BoxLayout(stateAbbrPanel, BoxLayout.Y_AXIS));  // Vertically stack checkboxes
+
+        // Add JCheckBoxes to the state abbreviation panel
+        JCheckBox[] stateCheckBoxes = new JCheckBox[stateAbbrs.length];
+        for (int i = 0; i < stateAbbrs.length; i++) {
+            stateCheckBoxes[i] = new JCheckBox(stateAbbrs[i]);
+            stateAbbrPanel.add(stateCheckBoxes[i]);
+        }
+
+        // Add JScrollPane to allow scrolling
+        JScrollPane stateScrollPane = new JScrollPane(stateAbbrPanel);
+        stateScrollPane.setPreferredSize(new Dimension(200, 200)); 
         gbc.gridx = 1;
         gbc.gridy = 1;
-        panel.add(stateAbbrField, gbc);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(stateScrollPane, gbc);
 
         // Industry Name
         JLabel industryNameLabel = new JLabel("Industry Name:");
@@ -206,7 +227,16 @@ public class SearchFrame extends JFrame {
                 String area = selectedAreas.toString();
 
                 // stateAbbr
-                String stateAbbr = stateAbbrField.toString();
+                StringBuilder selectedState = new StringBuilder();
+                for (int i = 0; i < stateCheckBoxes.length; i++) {
+                    if (stateCheckBoxes[i].isSelected()) {
+                        if (selectedState.length() > 0) {
+                            selectedState.append(",");
+                        }
+                        selectedState.append(stateAbbrs[i]);
+                    }
+                }
+                String stateAbbr = selectedState.toString();
 
                 // industryName
                 String industryName = industryNameField.getText();

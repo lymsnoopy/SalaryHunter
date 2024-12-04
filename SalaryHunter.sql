@@ -403,7 +403,7 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE GetFilteredRecords(
 	IN p_in_area VARCHAR(256),
-    IN p_stateAbbr CHAR(2),
+    IN p_stateAbbr VARCHAR(256),
     IN p_industryName VARCHAR(64),
     IN p_companyName VARCHAR(64),
     IN p_positionName VARCHAR(64),
@@ -427,7 +427,9 @@ BEGIN
     END IF;
 
     IF p_stateAbbr IS NOT NULL AND p_stateAbbr != '' THEN
-        SET @sql_query = CONCAT(@sql_query, ' AND (cb.state_abbr = "', p_in_area, '"');
+        SET @sql_query = CONCAT(@sql_query, ' AND (cb.state_abbr = "', REPLACE(p_stateAbbr, ',', '" OR cb.state_abbr = "'), '" )');
+    ELSE
+		SET @sql_query = CONCAT(@sql_query, ' AND cb.state_abbr != ""');
     END IF;
 
     IF p_industryName IS NOT NULL AND p_industryName != '' THEN
