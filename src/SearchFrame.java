@@ -286,6 +286,19 @@ public class SearchFrame extends JFrame {
             }
         });
 
+        // Add Action Listener to Add Button
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Open the AddRecordFrame
+                AddRecordFrame addRecordFrame = new AddRecordFrame(controller, username);
+                addRecordFrame.setVisible(true);
+
+                // Close the current SearchFrame
+                dispose();
+            }
+        });
+
         // Add Action Listener to Exit button
         exitButton.addActionListener(new ActionListener() {
             @Override

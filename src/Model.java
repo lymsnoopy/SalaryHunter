@@ -224,10 +224,86 @@ public class Model {
         return averageRate;
     }
 
+    // Insert Job Position and return job_id
+    public int addJobPosition(String positionName, String description, int year, BigDecimal salary, int companyId, String username) throws SQLException {
+        String query = "{CALL InsertJobPosition(?, ?, ?, ?, ?, ?, ?)}";
+        try (CallableStatement stmt = connection.prepareCall(query)) {
+            stmt.setString(1, positionName);
+            stmt.setString(2, description);
+            stmt.setInt(3, year);
+            stmt.setBigDecimal(4, salary);
+            stmt.setInt(5, companyId);
+            stmt.setString(6, username);
+            stmt.registerOutParameter(7, java.sql.Types.INTEGER);
+            stmt.execute();
+            return stmt.getInt(7);
+        }
+    }
+
+    // Insert Skill
+    public void addSkill(int jobId, String skillName) throws SQLException {
+        String query = "{CALL InsertSkill(?, ?)}";
+        try (CallableStatement stmt = connection.prepareCall(query)) {
+            stmt.setInt(1, jobId);
+            stmt.setString(2, skillName);
+            stmt.execute();
+        }
+    }
+
+    // Insert Benefit
+    public void addBenefit(int jobId, String benefitType, String benefitName) throws SQLException {
+        String query = "{CALL InsertBenefit(?, ?, ?)}";
+        try (CallableStatement stmt = connection.prepareCall(query)) {
+            stmt.setInt(1, jobId);
+            stmt.setString(2, benefitType);
+            stmt.setString(3, benefitName);
+            stmt.execute();
+        }
+    }
+
+    // Insert Interview
+    public void addInterview(int jobId, String interviewType, String description) throws SQLException {
+        String query = "{CALL InsertInterview(?, ?, ?)}";
+        try (CallableStatement stmt = connection.prepareCall(query)) {
+            stmt.setInt(1, jobId);
+            stmt.setString(2, interviewType);
+            stmt.setString(3, description);
+            stmt.execute();
+        }
+    }
+
     public void disconnect() throws SQLException {
         if (this.connection != null && !this.connection.isClosed()) {
             this.connection.close();
             System.exit(0);
         }
     }
+
+    public int getOrCreateCompanyId(String companyName, String stateAbbr) throws SQLException {
+        String query = "SELECT company_id FROM Company_Branch WHERE company_name = ? AND state_abbr = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, companyName);
+            stmt.setString(2, stateAbbr);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("company_id");
+            } else {
+                // Insert new company record if not found
+                String insertQuery = "INSERT INTO Company_Branch (company_name, state_abbr, industry_name) VALUES (?, ?, 'Unknown')";
+                try (PreparedStatement insertStmt = connection.prepareStatement(insertQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                    insertStmt.setString(1, companyName);
+                    insertStmt.setString(2, stateAbbr);
+                    insertStmt.executeUpdate();
+                    ResultSet generatedKeys = insertStmt.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        return generatedKeys.getInt(1);
+                    } else {
+                        throw new SQLException("Failed to insert new company.");
+                    }
+                }
+            }
+        }
+    }
+    
+
 }
