@@ -503,3 +503,101 @@ BEGIN
     RETURN v_avg_rate;
 END //
 DELIMITER ;
+
+-- when add record, get or create company id
+DELIMITER //
+CREATE FUNCTION GetCompanyID(
+	p_company_name VARCHAR(64),
+    p_state_abbr CHAR(2),
+    p_industry_name VARCHAR(64)
+)
+RETURNS INT 
+BEGIN
+	DECLARE v_company_id INT;
+    SELECT company_id INTO v_company_id FROM Company_Branch 
+		WHERE company_name = p_company_name AND state_abbr = p_state_abbr;
+	IF v_company_id IS NOT NULL THEN
+		RETURN v_company_id;
+	ELSE 
+		INSERT INTO Company_Branch (company_name, state_abbr, industry_name)
+        VALUES (p_company_name, p_state_abbr, p_industry_name);
+        RETURN LAST_INSERT_ID();
+	END IF;
+END //
+DELIMITER ;
+
+-- insert job position and get the job id
+DELIMITER //
+CREATE FUNCTION GetJobID(
+	p_position_name VARCHAR(64),
+	p_description VARCHAR(500),
+    p_year INT,
+    p_salary_amount DECIMAL(10, 2),
+	p_company_id INT,
+    p_username VARCHAR(64)
+)
+RETURNS INT 
+BEGIN
+	INSERT INTO Job_Position (position_name, description, year, salary_amount, company_id, username)
+	VALUES (p_position_name, p_description, p_year, p_salary_amount, p_company_id, p_username);
+    RETURN LAST_INSERT_ID();
+END //
+DELIMITER ;
+
+-- insert background
+DELIMITER //
+CREATE PROCEDURE insert_background(
+	IN p_job_id INT,
+    IN p_degree_level ENUM('BS', 'MS', 'PhD'),
+    IN p_university_name VARCHAR(64),
+    IN p_year_of_work INT,
+    IN p_username VARCHAR(64)
+)
+BEGIN
+	INSERT INTO Background (degree_level, university_name, year_of_work, username, job_id)
+    VALUES(p_degree_level, p_university_name, p_year_of_work, p_username, p_job_id);
+END //
+DELIMITER ;
+
+-- insert benefit
+DELIMITER //
+CREATE PROCEDURE insert_benefit(
+	IN p_job_id INT,
+    IN p_benefit_type ENUM('Insurance', 'Holiday', 'Stock', 'Retirement', 'Family'),
+    IN p_benefit_name VARCHAR(64)
+)
+BEGIN
+	INSERT INTO Benefit (benefit_type, benefit_name, job_id)
+    VALUES(p_benefit_type, p_benefit_name, p_job_id);
+END //
+DELIMITER ;
+
+-- insert skill
+DELIMITER //
+CREATE PROCEDURE insert_skill(
+	IN p_job_id INT,
+    IN p_skill_name VARCHAR(64)
+)
+BEGIN
+	INSERT INTO Skill (skill_name, job_id)
+    VALUES(p_skill_name, p_job_id);
+END //
+DELIMITER ;
+
+-- insert interview
+DELIMITER //
+CREATE PROCEDURE insert_interview(
+	IN r_job_id INT,
+    IN r_interview_type ENUM (
+		'Online Assessment', 
+        'Pre-Recorded Interview', 
+        'Behavioral Interview', 
+        'Technical Interview', 
+		'Supervisor Interview'),
+	IN r_description VARCHAR(500)
+)
+BEGIN
+	INSERT INTO Interview (interview_type, description, job_id)
+    VALUES(r_interview_type, r_description, r_job_id);
+END //
+DELIMITER ;

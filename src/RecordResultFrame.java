@@ -34,8 +34,8 @@ public class RecordResultFrame extends JFrame {
         // Define column names
         String[] columnNames = {
             "State Abbreviation", "Company Branch", "Industry Name", "Job ID", "Position Name",
-            "Year", "Salary Amount", "Position Description", "Degree Level", "Year of Work", 
-            "University Name", "Benefit", "Interview", "Skills", "Update", "Save", "Cancel", "Delete"
+            "Year", "Annual Salary Amount", "Position Description", "Degree Level", "Year of Work", 
+            "University Name", "Benefit", "Interview", "Skill", "Update", "Save", "Cancel", "Delete"
         };
 
         // Create table model
@@ -66,7 +66,7 @@ public class RecordResultFrame extends JFrame {
                 row.get("university_name"),
                 "View Details",  // For "Benefit" column
                 "View Details",  // For "Interview" column
-                "View Details",  // For "Skills" column
+                "View Details",  // For "Skill" column
                 "Update",  // For "Update" button
                 "Save",  // For "Save" button
                 "Cancel",  // For "Cancel" button
@@ -77,15 +77,15 @@ public class RecordResultFrame extends JFrame {
         // Create table
         JTable table = new JTable(tableModel);
 
-        // Set custom renderers and editors for "Interview", "Benefit", "Skills" columns, for "Update", "Save" and "Cancel" button
+        // Set custom renderers and editors for "Interview", "Benefit", "Skill" columns, for "Update", "Save" and "Cancel" button
         table.getColumn("Benefit").setCellRenderer(new ButtonRenderer());
         table.getColumn("Benefit").setCellEditor(new PersistentButtonEditor(controller, "benefit"));
 
         table.getColumn("Interview").setCellRenderer(new ButtonRenderer());
         table.getColumn("Interview").setCellEditor(new PersistentButtonEditor(controller, "interview"));
 
-        table.getColumn("Skills").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Skills").setCellEditor(new PersistentButtonEditor(controller, "skill"));
+        table.getColumn("Skill").setCellRenderer(new ButtonRenderer());
+        table.getColumn("Skill").setCellEditor(new PersistentButtonEditor(controller, "skill"));
 
         table.getColumn("Update").setCellRenderer(new ButtonRenderer());
         table.getColumn("Update").setCellEditor(new ButtonEditor(controller, table, tableModel, "Update"));
@@ -169,7 +169,7 @@ public class RecordResultFrame extends JFrame {
                     table.getColumn("Industry Name").setCellEditor(new DefaultCellEditor(new JTextField()));
                     table.getColumn("Position Name").setCellEditor(new DefaultCellEditor(new JTextField()));
                     table.getColumn("Year").setCellEditor(new DefaultCellEditor(new JTextField()));
-                    table.getColumn("Salary Amount").setCellEditor(new DefaultCellEditor(new JTextField()));
+                    table.getColumn("Annual Salary Amount").setCellEditor(new DefaultCellEditor(new JTextField()));
                     table.getColumn("Position Description").setCellEditor(new DefaultCellEditor(new JTextField()));
                     table.getColumn("Year of Work").setCellEditor(new DefaultCellEditor(new JTextField()));
                     table.getColumn("University Name").setCellEditor(new DefaultCellEditor(new JTextField()));
@@ -195,7 +195,7 @@ public class RecordResultFrame extends JFrame {
                             if (stateAbb.isEmpty() || companyName.isEmpty() || industryName.isEmpty() || positionName.isEmpty() 
                                 || description.isEmpty() || degree.isEmpty() || universityName.isEmpty()) {
                                     JOptionPane.showMessageDialog(RecordResultFrame.this, "Field can not be empty!", "Error", JOptionPane.ERROR_MESSAGE);
-                                }
+                            }
                             controller.callUpdateRecord(jobID, stateAbb, companyName, industryName, positionName, year, salaryAmount, description, degree, yearOfWork, universityName);
                             isUpdateMode = false;
                             tableModel.fireTableDataChanged();

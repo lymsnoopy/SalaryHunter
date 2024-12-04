@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -6,8 +8,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ResultFrame extends JFrame {
 
@@ -24,8 +24,8 @@ public class ResultFrame extends JFrame {
         // Define column names
         String[] columnNames = {
             "Area", "State Abbreviation", "Company Branch", "Industry Name", "Job ID", "Position Name",
-            "Year", "Salary Amount", "Position Description", "Degree Level", "Year of Work", 
-            "University Name", "Benefit", "Interview", "Skills"
+            "Year", "Annual Salary Amount", "Position Description", "Degree Level", "Year of Work", 
+            "University Name", "Benefit", "Interview", "Skill"
         };
 
         // Create table model
@@ -54,7 +54,7 @@ public class ResultFrame extends JFrame {
                 row.get("university"),
                 "View Details",  // For "Benefit" column
                 "View Details",  // For "Interview" column
-                "View Details",  // For "Skills" column
+                "View Details",  // For "Skill" column
             });
         }
 
@@ -68,8 +68,8 @@ public class ResultFrame extends JFrame {
         table.getColumn("Interview").setCellRenderer(new ButtonRenderer());
         table.getColumn("Interview").setCellEditor(new PersistentButtonEditor(controller, "interview"));
 
-        table.getColumn("Skills").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Skills").setCellEditor(new PersistentButtonEditor(controller, "skill"));
+        table.getColumn("Skill").setCellRenderer(new ButtonRenderer());
+        table.getColumn("Skill").setCellEditor(new PersistentButtonEditor(controller, "skill"));
 
         // Add table to the frame
         add(new JScrollPane(table), BorderLayout.CENTER);

@@ -178,14 +178,22 @@ public class Controller {
         return model.displayRate(CompanyBranch);
     }
 
+    public void exit() throws SQLException {
+        model.disconnect();
+    }
+
+    public int getOrCreateCompanyId(String companyName, String stateAbbr, String industryName) throws SQLException {
+        return model.getOrCreateCompanyId(companyName, stateAbbr, industryName);
+    }
+
     // Insert Job Position and get the generated job_id
     public int insertJobPosition(String positionName, String description, int year, BigDecimal salary, int companyId, String username) throws SQLException {
         return model.addJobPosition(positionName, description, year, salary, companyId, username);
     }
 
-    // Insert Skill
-    public void insertSkill(int jobId, String skillName) throws SQLException {
-        model.addSkill(jobId, skillName);
+    // Insert Background
+    public void insertBackground(int jobId, String degree, String universityName, int yearOfWork, String username) throws SQLException {
+        model.addBackground(jobId, degree, universityName, yearOfWork, username);
     }
 
     // Insert Benefit
@@ -193,38 +201,13 @@ public class Controller {
         model.addBenefit(jobId, benefitType, benefitName);
     }
 
+    // Insert Skill
+    public void insertSkill(int jobId, String skillName) throws SQLException {
+        model.addSkill(jobId, skillName);
+    }
+
     // Insert Interview
     public void insertInterview(int jobId, String interviewType, String description) throws SQLException {
         model.addInterview(jobId, interviewType, description);
     }
-
-    // Handle adding multiple skills
-    public void insertSkills(int jobId, List<String> skills) throws SQLException {
-        for (String skill : skills) {
-            insertSkill(jobId, skill);
-        }
-    }
-
-    // Handle adding multiple benefits
-    public void insertBenefits(int jobId, List<String[]> benefits) throws SQLException {
-        for (String[] benefit : benefits) {
-            insertBenefit(jobId, benefit[0], benefit[1]);
-        }
-    }
-
-    // Handle adding multiple interviews
-    public void insertInterviews(int jobId, List<String[]> interviews) throws SQLException {
-        for (String[] interview : interviews) {
-            insertInterview(jobId, interview[0], interview[1]);
-        }
-    }
-
-    public void exit() throws SQLException {
-        model.disconnect();
-    }
-
-    public int getOrCreateCompanyId(String companyName, String stateAbbr) throws SQLException {
-        return model.getOrCreateCompanyId(companyName, stateAbbr);
-    }
-
 }
