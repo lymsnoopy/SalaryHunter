@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class AddRecordFrame extends JFrame {
     private JTextField positionField, yearField, salaryField, descriptionField, stateAbbrField, companyNameField, industryField;
-    private JComboBox<String> degreeComboBox;
+    private JComboBox<String> stateComboBox, degreeComboBox;
     private JTextField universityField, yearOfWorkField;
 
     private final JPanel skillPanel, interviewPanel, benefitPanel;
@@ -96,8 +96,14 @@ public class AddRecordFrame extends JFrame {
 
     private void addFormFields(JPanel mainPanel) {
         mainPanel.add(new JLabel("State Abbreviation:"));
-        stateAbbrField = new JTextField();
-        mainPanel.add(stateAbbrField);
+        stateComboBox = new JComboBox<>(new String[]{
+            "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+            "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", 
+            "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
+            "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
+            "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY", "DC"
+        });
+        mainPanel.add(stateComboBox);
 
         mainPanel.add(new JLabel("Company Name:"));
         companyNameField = new JTextField();
@@ -209,7 +215,7 @@ public class AddRecordFrame extends JFrame {
     private void saveRecord(Controller controller, String username) {
         try {
             String companyName = companyNameField.getText();
-            String stateAbbr = stateAbbrField.getText();
+            String stateAbbr = (String) stateComboBox.getSelectedItem();
             String industryName = industryField.getText();
             String positionName = positionField.getText();
             String description = descriptionField.getText();

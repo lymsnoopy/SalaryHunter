@@ -164,7 +164,18 @@ public class RecordResultFrame extends JFrame {
                     currentRow = table.getSelectedRow();
                     isUpdateMode = true;
                     tableModel.fireTableDataChanged();
-                    table.getColumn("State Abbreviation").setCellEditor(new DefaultCellEditor(new JTextField()));
+
+                    String[] stateOptions = {
+                        "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+                        "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", 
+                        "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
+                        "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
+                        "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY", "DC"
+                    };
+                    JComboBox<String> stateComboBox = new JComboBox<>(stateOptions);
+                    table.getColumn("State Abbreviation").setCellEditor(new DefaultCellEditor(stateComboBox));
+
+                    // table.getColumn("State Abbreviation").setCellEditor(new DefaultCellEditor(new JTextField()));
                     table.getColumn("Company Branch").setCellEditor(new DefaultCellEditor(new JTextField()));
                     table.getColumn("Industry Name").setCellEditor(new DefaultCellEditor(new JTextField()));
                     table.getColumn("Position Name").setCellEditor(new DefaultCellEditor(new JTextField()));

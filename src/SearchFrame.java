@@ -204,8 +204,9 @@ public class SearchFrame extends JFrame {
                     }
                 }
                 String area = selectedAreas.toString();
+
                 // stateAbbr
-                String stateAbbr = stateAbbrField.getText();
+                String stateAbbr = stateAbbrField.toString();
 
                 // industryName
                 String industryName = industryNameField.getText();

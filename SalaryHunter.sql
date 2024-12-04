@@ -427,7 +427,7 @@ BEGIN
     END IF;
 
     IF p_stateAbbr IS NOT NULL AND p_stateAbbr != '' THEN
-        SET @sql_query = CONCAT(@sql_query, ' AND cb.state_abbr = "', p_stateAbbr, '"');
+        SET @sql_query = CONCAT(@sql_query, ' AND (cb.state_abbr = "', p_in_area, '"');
     END IF;
 
     IF p_industryName IS NOT NULL AND p_industryName != '' THEN
