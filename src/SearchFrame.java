@@ -349,5 +349,7 @@ public class SearchFrame extends JFrame {
 
         // Add panel to frame
         add(panel);
+        JScrollPane frameScrollPane = new JScrollPane(panel);
+        add(frameScrollPane);
     }
 }
