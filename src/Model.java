@@ -9,10 +9,18 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class Model {
-    /* Connection with the database */
+    /* Connection with the database. */
     private Connection connection = null;
-    private final String dbName = "SalaryHunter";
+    private final String dbName = "SalaryHunter";  // Database name.
 
+     /**
+     * Logs into the database.
+     * 
+     * @param username The username to log into the database.
+     * @param password The password to log into the database.
+     * 
+     * @throws SQLException
+     */
     public void databaseLogin(String username, String password) throws SQLException {
         String serverName = "localhost";
         int portNumber = 3306;
@@ -25,6 +33,15 @@ public class Model {
                     + "?characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true", connectionProps);
     }
 
+    /**
+     * Checks if a user exists in the database.
+     * 
+     * @param username The username to check.
+     * 
+     * @return true if the user exists, false otherwise.
+     * 
+     * @throws SQLException
+     */
     public boolean existsUsername(String username) throws SQLException {
         // check if username exists
         CallableStatement checkUser = connection.prepareCall(
@@ -36,6 +53,16 @@ public class Model {
         return checkUser.getBoolean(1);
     }
 
+     /**
+     * Verifies if the provided password matches the stored password for a given user.
+     * 
+     * @param username The username whose password is being verified.
+     * @param password The password to verify.
+     * 
+     * @return true if the password matches, false otherwise.
+     * 
+     * @throws SQLException
+     */
     public boolean passwordMatch(String username, String password) throws SQLException {
         CallableStatement checkPassword = connection.prepareCall(
             "{ ? = call password_match(?) }"
@@ -47,6 +74,16 @@ public class Model {
         return (password.equals(passwordIndb));
     }
 
+    /**
+     * Registers a new user in the database.
+     * 
+     * @param username The username for the new user.
+     * @param password The password for the new user.
+     * 
+     * @return true if the user was successfully added, false otherwise.
+     * 
+     * @throws SQLException
+     */
     public boolean addUser(String username, String password) throws SQLException {
         PreparedStatement insertUser = connection.prepareStatement(
             "{ CALL InsertUser(?, ?) }"
@@ -57,6 +94,15 @@ public class Model {
         return (update > 0);
     }
 
+    /**
+     * Retrieve records for current log in user.
+     * 
+     * @param username The username whose records are being fetched.
+     * 
+     * @return A result set of maps representing user records.
+     * 
+     * @throws SQLException
+     */
     public ResultSet ShowUserRecord(String username) throws SQLException {
         PreparedStatement userRecord = connection.prepareStatement(
             "{ CALL user_record(?) }"
@@ -65,6 +111,15 @@ public class Model {
         return userRecord.executeQuery();
     }
 
+    /**
+     * Retrieve benefits for a given job ID.
+     * 
+     * @param jobID The job ID to fetch benefits for.
+     * 
+     * @return A result set of maps representing the benefits.
+     * 
+     * @throws SQLException
+     */
     public ResultSet ShowUserRecordBenefit(int jobID) throws SQLException {
         PreparedStatement userRecordBenefit = connection.prepareStatement(
             "{ CALL record_benefit(?) }"
@@ -73,6 +128,15 @@ public class Model {
         return userRecordBenefit.executeQuery();
     }
 
+    /**
+     * Retrieve interviews for a given job ID.
+     * 
+     * @param jobID The job ID to fetch benefits for.
+     * 
+     * @return A result set of maps representing the interviews.
+     * 
+     * @throws SQLException
+     */
     public ResultSet ShowUserRecordInterview(int jobID) throws SQLException {
         PreparedStatement userRecordInterview = connection.prepareStatement(
             "{ CALL record_interview(?) }"
@@ -81,6 +145,15 @@ public class Model {
         return userRecordInterview.executeQuery();
     }
     
+    /**
+     * Retrieve skills for a given job ID.
+     * 
+     * @param jobID The job ID to fetch benefits for.
+     * 
+     * @return A result set of maps representing the skills.
+     * 
+     * @throws SQLException
+     */
     public ResultSet ShowUserRecordSkill(int jobID) throws SQLException {
         PreparedStatement userRecordSkill = connection.prepareStatement(
             "{ CALL record_skill(?) }"
@@ -89,6 +162,23 @@ public class Model {
         return userRecordSkill.executeQuery();
     }
 
+     /**
+     * Updates a job record with new information.
+     * 
+     * @param jobID The ID of the job to update.
+     * @param stateAbb The state abbreviation.
+     * @param companyName The company name.
+     * @param industryName The industry name.
+     * @param positionName The position name.
+     * @param year The year of the job.
+     * @param salaryAmount The salary amount for the job.
+     * @param description The description of the job.
+     * @param degree The degree required for the job.
+     * @param yearOfWork The number of years of work experience.
+     * @param universityName The university name.
+     * 
+     * @throws SQLException
+     */
     public void updateRecord(int jobID, String stateAbb, String companyName, String industryName, String positionName, int year, BigDecimal salaryAmount, String description, String degree, int yearOfWork, String universityName) throws SQLException {
         PreparedStatement recordUpdate = connection.prepareStatement(
             "{ CALL record_update(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }"
@@ -107,6 +197,12 @@ public class Model {
         recordUpdate.executeQuery();
     }
 
+    /**
+     * Deletes a job record from the database.
+     * 
+     * @param jobID The job ID to delete.
+     * @throws SQLException
+     */
     public void deleteRecord(int jobID) throws SQLException {
         PreparedStatement recordDelete = connection.prepareStatement(
             "{ CALL record_delete(?) }"
@@ -115,6 +211,15 @@ public class Model {
         recordDelete.executeQuery();
     }
 
+    /**
+     * Updates a benefit record with new information.
+     * 
+     * @param jobID The ID of the job to update.
+     * @param benefitType The type of the benefit.
+     * @param benefitName The name of the benefit.
+     * 
+     * @throws SQLException
+     */
     public void updateBenefit(int jobID, String benefitType, String benefitName) throws SQLException {
         PreparedStatement benefitUpdate = connection.prepareStatement(
             "{ CALL benefit_update(?, ?, ?) }"
@@ -125,6 +230,12 @@ public class Model {
         benefitUpdate.executeQuery();
     }
 
+    /**
+     * Deletes a benefit record from the database.
+     * 
+     * @param jobID The job ID to delete.
+     * @throws SQLException
+     */
     public void deleteBenefit(int jobID) throws SQLException {
         PreparedStatement benefitDelete = connection.prepareStatement(
             "{ CALL benefit_delete(?) }"
@@ -133,15 +244,29 @@ public class Model {
         benefitDelete.executeQuery();
     }
 
+    /**
+     * Updates a skill record with new information.
+     * 
+     * @param jobID The ID of the job to update.
+     * @param skillName The name of the skill.
+     * 
+     * @throws SQLException
+     */
     public void updateSkill(int jobID, String skillName) throws SQLException {
         PreparedStatement skillUpdate = connection.prepareStatement(
-            "{ CALL skill_update(?, ?, ?) }"
+            "{ CALL skill_update(?, ?) }"
         );
         skillUpdate.setInt(1, jobID);
         skillUpdate.setString(2, skillName);
         skillUpdate.executeQuery();
     }
 
+    /**
+     * Deletes a skill record from the database.
+     * 
+     * @param jobID The job ID to delete.
+     * @throws SQLException
+     */
     public void deleteSkill(int jobID) throws SQLException {
         PreparedStatement skillDelete = connection.prepareStatement(
             "{ CALL skill_delete(?) }"
@@ -150,6 +275,15 @@ public class Model {
         skillDelete.executeQuery();
     }
 
+    /**
+     * Updates a interview record with new information.
+     * 
+     * @param jobID The ID of the job to update.
+     * @param interviewType The type of the interview.
+     * @param description The description of the interview.
+     * 
+     * @throws SQLException
+     */
     public void updateInterview(int jobID, String interviewType, String description) throws SQLException {
         PreparedStatement interviewUpdate = connection.prepareStatement(
             "{ CALL interview_update(?, ?, ?) }"
@@ -160,6 +294,12 @@ public class Model {
         interviewUpdate.executeQuery();
     }
 
+    /**
+     * Deletes a interview record from the database.
+     * 
+     * @param jobID The job ID to delete.
+     * @throws SQLException
+     */
     public void deleteInterview(int jobID) throws SQLException {
         PreparedStatement interviewDelete = connection.prepareStatement(
             "{ CALL interview_delete(?) }"
@@ -168,6 +308,23 @@ public class Model {
         interviewDelete.executeQuery();
     }
 
+    /**
+     * Executes a search in the database based on various search criteria.
+     * 
+     * @param area The area of the job.
+     * @param stateAbbr The state abbreviation.
+     * @param industryName The name of the industry.
+     * @param companyBranch The company branch.
+     * @param positionName The job position.
+     * @param year The year of the job.
+     * @param degree The degree required for the job.
+     * @param universityName The name of the university.
+     * @param yearOfWork The number of years of work experience required.
+     * 
+     * @return A result set of maps representing search results.
+     * 
+     * @throws SQLException
+     */
     public ResultSet executeSearch(
         String area, String stateAbbr, String industryName, String companyBranch, String positionName, 
         Integer year, String degree, String universityName, Integer yearOfWork) throws SQLException {
@@ -195,6 +352,13 @@ public class Model {
         return stmt.executeQuery();
     }
 
+    /**
+     * Retrieves a list of company names from the database.
+     * 
+     * @return A list of company names.
+     * 
+     * @throws SQLException
+     */
     public ResultSet searchCompany() throws SQLException {
         PreparedStatement searchCompany = connection.prepareStatement(
             "{ CALL SearchCompany() }"
@@ -202,6 +366,16 @@ public class Model {
         return searchCompany.executeQuery();
     }
 
+     /**
+     * Adds a rating for a given company.
+     * @param username The username submitting the rating.
+     * @param companyBranch The company being rated.
+     * @param rate The rating value.
+     * 
+     * @return true if the rating was added successfully, false otherwise.
+     * 
+     * @throws SQLException
+     */
     public boolean addRate(String username, String CompanyBranch, int rate) throws SQLException {
         PreparedStatement addRate = connection.prepareStatement(
             "{ CALL InsertRate(?, ?, ?) }"
@@ -213,6 +387,15 @@ public class Model {
         return (update > 0);
     }
 
+    /**
+     * Retrieves the average rating for a given company branch.
+     * 
+     * @param CompanyBranch The company branch to get the rating for.
+     * 
+     * @return The average rating as a BigDecimal.
+     * 
+     * @throws SQLException
+     */
     public BigDecimal displayRate(String CompanyBranch) throws SQLException {
         CallableStatement rate = connection.prepareCall(
             "{ ? = call DisplayRate(?) }"
@@ -224,6 +407,11 @@ public class Model {
         return averageRate;
     }
 
+    /**
+     * Closes the database connection.
+     * 
+     * @throws SQLException
+     */
     public void disconnect() throws SQLException {
         if (this.connection != null && !this.connection.isClosed()) {
             this.connection.close();
@@ -231,6 +419,17 @@ public class Model {
         }
     }
 
+    /**
+     * Retrieves or creates a company ID.
+     * 
+     * @param companyName The company name.
+     * @param stateAbbr The state abbreviation.
+     * @param industryName The industry name.
+     * 
+     * @return The company ID.
+     * 
+     * @throws SQLException
+     */
     public int getOrCreateCompanyId(String companyName, String stateAbbr, String industryName) throws SQLException {
         CallableStatement getCompanyID = connection.prepareCall(
             "{ ? = call GetCompanyID(?, ?, ?) }"
@@ -244,7 +443,20 @@ public class Model {
         return id;
     }
 
-    // Insert Job Position and return job_id
+    /**
+     * Inserts a new job position into the database and returns the generated job ID.
+     * 
+     * @param positionName The name of the job position.
+     * @param description A description of the job position.
+     * @param year The year the job position was created.
+     * @param salary The salary for the job.
+     * @param companyId The ID of the company offering the job.
+     * @param username The username of the person adding the job position.
+     * 
+     * @return The generated job ID.
+     * 
+     * @throws SQLException
+     */
     public int addJobPosition(String positionName, String description, int year, BigDecimal salary, int companyId, String username) throws SQLException {
         CallableStatement getJobID = connection.prepareCall(
             "{ ? = call GetJobID(?, ?, ?, ?, ?, ?) }"
@@ -261,7 +473,17 @@ public class Model {
         return id;
     }
 
-    // Insert Background
+    /**
+     * Inserts background information for a given job position.
+     * 
+     * @param jobId The job ID to insert the background information for.
+     * @param degree The degree required for the position.
+     * @param universityName The university name.
+     * @param yearOfWork The number of years of work experience required.
+     * @param username The username of the person adding the background information.
+     * 
+     * @throws SQLException
+     */
     public void addBackground(int jobId, String degree, String universityName, int yearOfWork, String username) throws SQLException {
         CallableStatement background = connection.prepareCall(
             "{ CALL insert_background(?, ?, ?, ?, ?) }"
@@ -274,7 +496,15 @@ public class Model {
         background.executeQuery();
     }
 
-    // Insert Benefit
+    /**
+     * Inserts a benefit for a given job position.
+     * 
+     * @param jobId The job ID to insert the benefit for.
+     * @param benefitType The type of benefit.
+     * @param benefitName The name of the benefit.
+     * 
+     * @throws SQLException
+     */
     public void addBenefit(int jobId, String benefitType, String benefitName) throws SQLException {
         CallableStatement benefit = connection.prepareCall(
             "{ CALL insert_benefit(?, ?, ?) }"
@@ -285,7 +515,14 @@ public class Model {
         benefit.executeQuery();
     }
 
-    // Insert Skill
+    /**
+     * Inserts a skill required for a given job position.
+     * 
+     * @param jobId The job ID to insert the skill for.
+     * @param skillName The name of the skill.
+     * 
+     * @throws SQLException
+     */
     public void addSkill(int jobId, String skillName) throws SQLException {
         CallableStatement skill = connection.prepareCall(
             "{ CALL insert_skill(?, ?) }"
@@ -295,7 +532,15 @@ public class Model {
         skill.executeQuery();
     }
 
-    // Insert Interview
+    /**
+     * Inserts an interview record for a given job position.
+     * 
+     * @param jobId The job ID to insert the interview for.
+     * @param interviewType The type of interview.
+     * @param description A description of the interview process.
+     * 
+     * @throws SQLException
+     */
     public void addInterview(int jobId, String interviewType, String description) throws SQLException {
         CallableStatement interview = connection.prepareCall(
             "{ CALL insert_interview(?, ?, ?) }"
@@ -305,5 +550,4 @@ public class Model {
         interview.setString(3, description); 
         interview.executeQuery();
     }
-    
 }

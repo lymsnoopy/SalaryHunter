@@ -6,6 +6,13 @@ import javax.swing.table.DefaultTableModel;
 
 public class SearchSkillFrame extends JFrame {
 
+    /**
+     * Constructor of the SearchSkillFrame class.
+     * 
+     * @param controller The controller.
+     * @param skillDetails List of maps containing skill details to be displayed in the table.
+     * @param job_id The job ID associated with the skill.
+     */
     public SearchSkillFrame(Controller controller, List<Map<String, String>> skillDetails, int job_id) {
         setTitle("Skill Details");
         setSize(600, 400);

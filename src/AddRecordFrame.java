@@ -8,15 +8,26 @@ import java.util.List;
 import javax.swing.*;
 
 public class AddRecordFrame extends JFrame {
-    private JTextField positionField, yearField, salaryField, descriptionField, stateAbbrField, companyNameField, industryField;
+    // Input for company, position and salary related fields.
+    private JTextField positionField, yearField, salaryField, descriptionField, companyNameField, industryField, universityField, yearOfWorkField;
     private JComboBox<String> stateComboBox, degreeComboBox;
-    private JTextField universityField, yearOfWorkField;
 
+    // Panels to dynamically add skill, interview, and benefit information.
     private final JPanel skillPanel, interviewPanel, benefitPanel;
+
+    // Lists to store skill, interview, and benefit information.
     private final List<JTextField> skillFields = new ArrayList<>();
     private final List<JPanel> interviewFields = new ArrayList<>();
     private final List<JPanel> benefitFields = new ArrayList<>();
 
+     /**
+     * Constructor for the AddRecordFrame class.
+     * Sets up the main frame layout.
+     * User can search, add, view, rate and exit.
+     *
+     * @param controller The controller.
+     * @param username The username of the current user log in.
+     */
     public AddRecordFrame(Controller controller, String username) {
         setTitle("Add New Record");
         setSize(2000, 1200);
@@ -94,6 +105,11 @@ public class AddRecordFrame extends JFrame {
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
+    /**
+     * Add fields to the main panel.
+     * 
+     * @param mainPanel The panel to which fields will be added.
+     */
     private void addFormFields(JPanel mainPanel) {
         mainPanel.add(new JLabel("State Abbreviation:"));
         stateComboBox = new JComboBox<>(new String[]{
@@ -142,6 +158,11 @@ public class AddRecordFrame extends JFrame {
         mainPanel.add(yearOfWorkField);
     }
 
+    /**
+     * Creates a dynamic panel for adding skill information.
+     * 
+     * @return A JPanel with a list of skill input fields.
+     */
     private JPanel createDynamicSkillPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         JPanel inputPanel = new JPanel(new GridLayout(0, 1, 5, 5));
@@ -171,6 +192,15 @@ public class AddRecordFrame extends JFrame {
         return panel;
     }
 
+    /**
+     * Creates a dynamic panel for adding interview or benefit information.
+     * 
+     * @param title The title for the section.
+     * @param fieldList A list to store the added fields.
+     * @param comboBoxOptions Options to populate the combo box.
+     * 
+     * @return A JPanel containing dynamic input fields.
+     */
     private JPanel createDynamicPanelWithDelete(String title, List<JPanel> fieldList, String[] comboBoxOptions) {
         JPanel panel = new JPanel(new BorderLayout());
         JPanel inputPanel = new JPanel(new GridLayout(0, 1, 5, 5));
@@ -204,6 +234,11 @@ public class AddRecordFrame extends JFrame {
         return panel;
     }
 
+    /**
+     * Creates a panel containing dynamic sections for skill, interview, and benefit.
+     * 
+     * @return A JPanel containing the skill, interview, and benefit panels.
+     */
     private JPanel createSidePanel() {
         JPanel sidePanel = new JPanel(new GridLayout(3, 1, 10, 10));
         sidePanel.add(skillPanel);
@@ -212,6 +247,12 @@ public class AddRecordFrame extends JFrame {
         return sidePanel;
     }
 
+    /**
+     * Saves the record entered in the form to the database.
+     *
+     * @param controller The controller.
+     * @param username The username of the current user log in.
+     */
     private void saveRecord(Controller controller, String username) {
         try {
             String companyName = companyNameField.getText();
@@ -228,7 +269,8 @@ public class AddRecordFrame extends JFrame {
 
             // check fields not empty
             if (companyName.isEmpty() || stateAbbr.isEmpty() || industryName.isEmpty() || positionName.isEmpty() 
-                || description.isEmpty() || degree.isEmpty() || universityName.isEmpty()) {
+                || description.isEmpty() || degree.isEmpty() || universityName.isEmpty() || checkBenefitEmpty()
+                || checkInterviewEmpty() || checkSkillEmpty()) {
                     JOptionPane.showMessageDialog(AddRecordFrame.this, "Field cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 // Validate and get or insert company
@@ -245,7 +287,9 @@ public class AddRecordFrame extends JFrame {
                     JTextField textField = (JTextField) inputSubPanel.getComponent(1);
                     String benefitType = (String) comboBox.getSelectedItem();
                     String benefitName = textField.getText();
-                    if (!benefitType.isEmpty() && !benefitName.isEmpty()) {
+                    if (benefitType.isEmpty() || benefitName.isEmpty()) {
+                        JOptionPane.showMessageDialog(AddRecordFrame.this, "Benefit field cannot be empty!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
                         controller.insertBenefit(jobId, benefitType, benefitName);
                     }
                 }
@@ -253,7 +297,9 @@ public class AddRecordFrame extends JFrame {
                 // Insert Skills
                 for (JTextField skillField : skillFields) {
                     String skillName = skillField.getText();
-                    if (!skillName.isEmpty()) {
+                    if (skillName.isEmpty()) {
+                        JOptionPane.showMessageDialog(AddRecordFrame.this, "Skill field cannot be empty!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
                         controller.insertSkill(jobId, skillName);
                     }
                 }
@@ -265,7 +311,9 @@ public class AddRecordFrame extends JFrame {
                     JTextField textField = (JTextField) inputSubPanel.getComponent(1);
                     String interviewType = (String) comboBox.getSelectedItem();
                     String InterviewDescription = textField.getText();
-                    if (!interviewType.isEmpty() && !InterviewDescription.isEmpty()) {
+                    if (interviewType.isEmpty() || InterviewDescription.isEmpty()) {
+                        JOptionPane.showMessageDialog(AddRecordFrame.this, "Interview field cannot be empty!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
                         controller.insertInterview(jobId, interviewType, InterviewDescription);
                     }
                 }
@@ -279,5 +327,58 @@ public class AddRecordFrame extends JFrame {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(AddRecordFrame.this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    /**
+     * checks whether any of the benefit fields are empty.
+     * 
+     * @return true if any of the benefit fields is empty, otherwise false.
+     */
+    private boolean checkBenefitEmpty() {
+        for (JPanel benefitField : benefitFields) {
+            JPanel inputSubPanel = (JPanel) benefitField.getComponent(0);
+            JComboBox<?> comboBox = (JComboBox<?>) inputSubPanel.getComponent(0);
+            JTextField textField = (JTextField) inputSubPanel.getComponent(1);
+            String benefitType = (String) comboBox.getSelectedItem();
+            String benefitName = textField.getText();
+            if (benefitType.isEmpty() || benefitName.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * checks whether any of the skill fields are empty.
+     * 
+     * @return true if any of the skill fieldss is empty, otherwise false.
+     */
+    private boolean checkSkillEmpty() {
+        for (JTextField skillField : skillFields) {
+            String skillName = skillField.getText();
+            if (skillName.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * checks whether any of the interview fields are empty.
+     * 
+     * @return true if any of the interview fields is empty, otherwise false.
+     */
+    private boolean checkInterviewEmpty() {
+        for (JPanel interviewField : interviewFields) {
+            JPanel inputSubPanel = (JPanel) interviewField.getComponent(0);
+            JComboBox<?> comboBox = (JComboBox<?>) inputSubPanel.getComponent(0);
+            JTextField textField = (JTextField) inputSubPanel.getComponent(1);
+            String interviewType = (String) comboBox.getSelectedItem();
+            String InterviewDescription = textField.getText();
+            if (interviewType.isEmpty() || InterviewDescription.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

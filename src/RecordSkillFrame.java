@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.*;
@@ -8,9 +10,17 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 public class RecordSkillFrame extends JFrame {
-    private boolean isUpdateMode = false;
-    private int currentRow = -1;
+    private boolean isUpdateMode = false;  // Flag indicating if the table is in update mode.
+    private int currentRow = -1;  // The index number of the row currently being updated.
+    private List<Map<String, String>> originalResults = new ArrayList<>(); // Store the original values of a row before editing.
 
+    /**
+     * Constructor of the RecordSkillFrame class.
+     * 
+     * @param controller The controller.
+     * @param skillDetails List of maps containing skill details to be displayed in the table.
+     * @param job_id The job ID associated with the skill.
+     */
     public RecordSkillFrame(Controller controller, List<Map<String, String>> skillDetails, int job_id) {
         setTitle("Skill Details");
         setSize(600, 400);
@@ -42,7 +52,7 @@ public class RecordSkillFrame extends JFrame {
             }
         } else {
             // If no details are available, add a single row indicating no data
-            tableModel.addRow(new Object[]{"No skill details available", ""});
+            tableModel.addRow(new Object[]{"No skill details available", "Update", "Save", "Cancel", "Delete"});
         }
 
         // Create the table
@@ -64,7 +74,9 @@ public class RecordSkillFrame extends JFrame {
         add(new JScrollPane(table), BorderLayout.CENTER);
     }
 
-    // ButtonRenderer class for rendering the "Update", "Save", "Cancel", and "Delete" button
+    /**
+     * ButtonRenderer class renders the buttons in the "Update", "Save", "Cancel", and "Delete" columns.
+     */
     private static class ButtonRenderer extends JButton implements TableCellRenderer {
         public ButtonRenderer() {
             setOpaque(true);
@@ -78,9 +90,21 @@ public class RecordSkillFrame extends JFrame {
         }
     }
     
+    /**
+     * ButtonEditor class handles the button click actions in the table.
+     */
     private class ButtonEditor extends AbstractCellEditor implements TableCellEditor {
-        private final JButton button;
+        private final JButton button;  // The button used for each action.
 
+        /**
+         * Constructor of the ButtonEditor class.
+         * 
+         * @param controller The controller.
+         * @param table The JTable containing the benefit details.
+         * @param tableModel The DefaultTableModel used by the table.
+         * @param type The action type.
+         * @param job_id The job ID associated with the skill.
+         */
         public ButtonEditor(Controller controller, JTable table, DefaultTableModel tableModel, String type, int job_id) {
             button = new JButton();
             button.setOpaque(true);
@@ -89,16 +113,31 @@ public class RecordSkillFrame extends JFrame {
                     currentRow = table.getSelectedRow();
                     isUpdateMode = true;
                     tableModel.fireTableDataChanged();
+
+                    // Store the original values before making changes.
+                    originalResults.clear();
+                    Map<String, String> originalRow = new HashMap<>();
+                    for (int col = 0; col < table.getColumnCount(); col++) {
+                        originalRow.put(table.getColumnName(col), table.getValueAt(currentRow, col).toString());
+                    }
+                    originalResults.add(originalRow);
+
                     table.getColumn("Skill Name").setCellEditor(new DefaultCellEditor(new JTextField()));
                 } else if (type.equals("Save")) {
                     int selectedRow = table.getSelectedRow();
                     if (selectedRow != -1) {
                         try {
                             String skillName = (String) tableModel.getValueAt(selectedRow, 0);
-                            controller.callUpdateSkill(job_id, skillName);
-                            isUpdateMode = false;
-                            tableModel.fireTableDataChanged();
-                            JOptionPane.showMessageDialog(RecordSkillFrame.this, "Update successfully!", "Update Message", JOptionPane.INFORMATION_MESSAGE);
+                            
+                            if (skillName.isEmpty()) {
+                                JOptionPane.showMessageDialog(RecordSkillFrame.this, "Field cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                controller.callUpdateSkill(job_id, skillName);
+                                isUpdateMode = false;
+                                tableModel.fireTableDataChanged();
+                                JOptionPane.showMessageDialog(RecordSkillFrame.this, "Update successfully!", "Update Message", JOptionPane.INFORMATION_MESSAGE);
+                            }
+                            
                         } catch (SQLException ex) {
                             JOptionPane.showMessageDialog(RecordSkillFrame.this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
                         } catch (NumberFormatException en) {
@@ -107,15 +146,39 @@ public class RecordSkillFrame extends JFrame {
                     } 
                 } else if (type.equals("Cancel")) {
                     isUpdateMode = false;
+                    if (!originalResults.isEmpty()) {
+                        Map<String, String> originalRow = originalResults.get(0);
+                        for (int col = 0; col < table.getColumnCount(); col++) {
+                            table.setValueAt(originalRow.get(table.getColumnName(col)), currentRow, col);
+                        }
+                    }
                     tableModel.fireTableDataChanged();
                 } else if (type.equals("Delete")) {
                     int selectedRow = table.getSelectedRow();
+                    if (table.isEditing()) {
+                        table.getCellEditor().stopCellEditing();  // Stop the active editor
+                    }
                     if (selectedRow != -1) {
                         try {
                             controller.callDeleteSkill(job_id);
                             tableModel.removeRow(selectedRow);
                             tableModel.fireTableRowsDeleted(selectedRow, selectedRow);
                             JOptionPane.showMessageDialog(RecordSkillFrame.this, "Delete successfully!", "Update Message", JOptionPane.INFORMATION_MESSAGE);
+                            int newSelectedRow = -1;
+                            if (tableModel.getRowCount() > 0) {
+                                if (selectedRow < tableModel.getRowCount()) {
+                                    newSelectedRow = selectedRow;
+                                } else {
+                                    newSelectedRow = selectedRow - 1;
+                                }
+                            } else {
+                                tableModel.addRow(new Object[]{"No skill details available", "Update", "Save", "Cancel", "Delete"});
+                            }
+                            if (newSelectedRow != -1) {
+                                table.setRowSelectionInterval(newSelectedRow, newSelectedRow);
+                            } else {
+                                table.clearSelection();
+                            }
                             tableModel.fireTableDataChanged();
                         } catch (SQLException ex) {
                             JOptionPane.showMessageDialog(RecordSkillFrame.this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);

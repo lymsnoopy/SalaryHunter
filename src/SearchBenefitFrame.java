@@ -6,6 +6,13 @@ import javax.swing.table.DefaultTableModel;
 
 public class SearchBenefitFrame extends JFrame {
 
+    /**
+     * Constructor of the SearchBenefitFrame class.
+     * 
+     * @param controller The controller.
+     * @param benefitDetails List of maps containing benefit details to be displayed in the table.
+     * @param job_id The job ID associated with the benefits.
+     */
     public SearchBenefitFrame(Controller controller, List<Map<String, String>> benefitDetails, int job_id) {
         setTitle("Benefit Details");
         setSize(600, 400);

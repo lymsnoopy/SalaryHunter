@@ -8,8 +8,13 @@ import javax.swing.*;
 
 public class SearchFrame extends JFrame {
 
+    /**
+     * Constructor of the SearchFrame class.
+     * 
+     * @param controller The controller.
+     * @param username Username of the current user log in.
+     */
     public SearchFrame(Controller controller, String username) {
-
         // Frame properties
         setTitle("Main Page");
         setSize(600, 1000);

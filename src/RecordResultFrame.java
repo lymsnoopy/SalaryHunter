@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.*;
@@ -12,10 +13,17 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 public class RecordResultFrame extends JFrame {
-    private List<Map<String, String>> results = new ArrayList<>();
-    private boolean isUpdateMode = false;
-    private int currentRow = -1;
+    private List<Map<String, String>> results = new ArrayList<>();  // List that includes the information.
+    private boolean isUpdateMode = false;  // Flag indicating if the table is in update mode.
+    private int currentRow = -1;  // The index number of the row currently being updated.
+    private List<Map<String, String>> originalResults = new ArrayList<>(); // Store the original values of a row before editing.
 
+    /**
+     * Constructor of the RecordResultFrame class.
+     * 
+     * @param controller The controller.
+     * @param username Username of the current user log in.
+     */
     public RecordResultFrame(Controller controller, String username) {
         setTitle("User Record");
         setSize(2000, 500);
@@ -138,7 +146,9 @@ public class RecordResultFrame extends JFrame {
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    // ButtonRenderer class for rendering the button
+    /**
+     * ButtonRenderer class renders the buttons in the "Update", "Save", "Cancel", and "Delete" columns.
+     */
     private static class ButtonRenderer extends JButton implements TableCellRenderer {
         public ButtonRenderer() {
             setOpaque(true);
@@ -152,10 +162,20 @@ public class RecordResultFrame extends JFrame {
         }
     }
 
+    /**
+     * ButtonEditor class handles the button click actions in the table.
+     */
     private class ButtonEditor extends AbstractCellEditor implements TableCellEditor {
-        private final JButton button;
-
+        private final JButton button;   // The button used for each action.
    
+        /**
+         * Constructor of the ButtonEditor class.
+         * 
+         * @param controller The controller.
+         * @param table The JTable containing the benefit details.
+         * @param tableModel The DefaultTableModel used by the table.
+         * @param type The action type.
+         */
         public ButtonEditor(Controller controller, JTable table, DefaultTableModel tableModel, String type) {
             button = new JButton();
             button.setOpaque(true);
@@ -164,6 +184,14 @@ public class RecordResultFrame extends JFrame {
                     currentRow = table.getSelectedRow();
                     isUpdateMode = true;
                     tableModel.fireTableDataChanged();
+
+                    // Store the original values before making changes.
+                    originalResults.clear();
+                    Map<String, String> originalRow = new HashMap<>();
+                    for (int col = 0; col < table.getColumnCount(); col++) {
+                        originalRow.put(table.getColumnName(col), table.getValueAt(currentRow, col).toString());
+                    }
+                    originalResults.add(originalRow);
 
                     String[] stateOptions = {
                         "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
@@ -175,7 +203,6 @@ public class RecordResultFrame extends JFrame {
                     JComboBox<String> stateComboBox = new JComboBox<>(stateOptions);
                     table.getColumn("State Abbreviation").setCellEditor(new DefaultCellEditor(stateComboBox));
 
-                    // table.getColumn("State Abbreviation").setCellEditor(new DefaultCellEditor(new JTextField()));
                     table.getColumn("Company Branch").setCellEditor(new DefaultCellEditor(new JTextField()));
                     table.getColumn("Industry Name").setCellEditor(new DefaultCellEditor(new JTextField()));
                     table.getColumn("Position Name").setCellEditor(new DefaultCellEditor(new JTextField()));
@@ -219,9 +246,18 @@ public class RecordResultFrame extends JFrame {
                     }
                 } else if (type.equals("Cancel")) {
                     isUpdateMode = false;
+                    if (!originalResults.isEmpty()) {
+                        Map<String, String> originalRow = originalResults.get(0);
+                        for (int col = 0; col < table.getColumnCount(); col++) {
+                            table.setValueAt(originalRow.get(table.getColumnName(col)), currentRow, col);
+                        }
+                    }
                     tableModel.fireTableDataChanged();
                 } else if (type.equals("Delete")) {
                     int selectedRow = table.getSelectedRow();
+                    if (table.isEditing()) {
+                        table.getCellEditor().stopCellEditing();  // Stop the active editor
+                    }
                     if (selectedRow != -1) {
                         int jobID = Integer.parseInt((String) tableModel.getValueAt(selectedRow, 3));
                         try {
@@ -229,6 +265,19 @@ public class RecordResultFrame extends JFrame {
                             tableModel.removeRow(selectedRow);
                             tableModel.fireTableRowsDeleted(selectedRow, selectedRow);
                             JOptionPane.showMessageDialog(RecordResultFrame.this, "Delete successfully!", "Update Message", JOptionPane.INFORMATION_MESSAGE);
+                            int newSelectedRow = -1;
+                            if (tableModel.getRowCount() > 0) {
+                                if (selectedRow < tableModel.getRowCount()) {
+                                    newSelectedRow = selectedRow;
+                                } else {
+                                    newSelectedRow = selectedRow - 1;
+                                }
+                            }
+                            if (newSelectedRow != -1) {
+                                table.setRowSelectionInterval(newSelectedRow, newSelectedRow);
+                            } else {
+                                table.clearSelection();
+                            }
                             tableModel.fireTableDataChanged();
                         } catch (SQLException ex) {
                             JOptionPane.showMessageDialog(RecordResultFrame.this, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -255,10 +304,18 @@ public class RecordResultFrame extends JFrame {
         }
     }
 
-    // PersistentButtonEditor class for handling "View Details" button clicks without disappearing
+    /**
+     * PersistentButtonEditor class for handling "View Details" button clicks without disappearing.
+     */
     private class PersistentButtonEditor extends AbstractCellEditor implements TableCellEditor {
-        private JButton button;
+        private JButton button;  // The button used for each action.
     
+        /**
+         * Constructor of the PersistentButtonEditor class.
+         * 
+         * @param controller The controller.
+         * @param type The action type.
+         */
         public PersistentButtonEditor(Controller controller, String type) {
             button = new JButton();
             button.setOpaque(true);

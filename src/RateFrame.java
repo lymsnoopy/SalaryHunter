@@ -9,8 +9,13 @@ import javax.swing.*;
 
 public class RateFrame extends JFrame {
 
+    /**
+     * Constructor of the RateFrame class.
+     
+     * @param controller The controller.
+     * @param username The username of the current user log in.
+     */
     public RateFrame(Controller controller, String username) {
-
         // Frame properties
         setTitle("Rate Page");
         setSize(600, 400);
@@ -35,7 +40,7 @@ public class RateFrame extends JFrame {
             JOptionPane.showMessageDialog(RateFrame.this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         JComboBox<String> companyComboBox = new JComboBox<>(companyNames.toArray(new String[0]));
-        // JTextField companyBranchField = new JTextField(20);
+
         gbc.gridx = 1;
         gbc.gridy = 0;
         panel.add(companyComboBox, gbc);

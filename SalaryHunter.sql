@@ -24,9 +24,9 @@ CREATE TABLE IF NOT EXISTS Company_Branch (
 
 CREATE TABLE IF NOT EXISTS Job_Position (
     job_id INT AUTO_INCREMENT PRIMARY KEY,
-	position_name VARCHAR(64),
-    description VARCHAR(500),
-    year INT NOT NULL,
+	position_name VARCHAR(64) NOT NULL,
+    description VARCHAR(500) NOT NULL,
+    year INT NOT NULL ,
     salary_amount DECIMAL(10, 2) NOT NULL CHECK (salary_amount >= 0),
     company_id INT,
     FOREIGN KEY (company_id) REFERENCES Company_Branch(company_id)
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS Job_Position (
 
 CREATE TABLE IF NOT EXISTS Benefit (
 	benefit_id INT AUTO_INCREMENT PRIMARY KEY,
-    benefit_name VARCHAR(64),
+    benefit_name VARCHAR(64) NOT NULL,
 	benefit_type ENUM('Insurance', 'Holiday', 'Stock', 'Retirement', 'Family'),
     job_id INT,
     FOREIGN KEY (job_id) REFERENCES Job_Position(job_id)
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS Interview (
 						'Behavioral Interview', 
                         'Technical Interview', 
                         'Supervisor Interview'),
-	description VARCHAR(500),
+	description VARCHAR(500) NOT NULL,
     job_id INT,
     FOREIGN KEY (job_id) REFERENCES Job_Position(job_id)
 		ON UPDATE CASCADE ON DELETE CASCADE
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS Background (
 
 CREATE TABLE IF NOT EXISTS Skill (
 	skill_id INT AUTO_INCREMENT PRIMARY KEY,
-	skill_name VARCHAR(64),
+	skill_name VARCHAR(64) NOT NULL,
     job_id INT,
     FOREIGN KEY (job_id) REFERENCES Job_Position(job_id)
 		ON UPDATE CASCADE ON DELETE CASCADE
@@ -331,9 +331,14 @@ CREATE PROCEDURE benefit_update (
     IN r_benefit_name VARCHAR(64)
 )
 BEGIN
+	IF EXISTS (SELECT 1 FROM Benefit WHERE job_id = r_job_id) THEN
 	UPDATE Benefit
     SET benefit_name = r_benefit_name, benefit_type = r_benefit_type
-    WHERE job_id = r_job_id;
+		WHERE job_id = r_job_id;
+	ELSE
+    INSERT INTO Benefit (job_id, benefit_name, benefit_type)
+        VALUES (r_job_id, r_benefit_name, r_benefit_type);
+	END IF;
 END //
 DELIMITER ;
 
@@ -354,9 +359,14 @@ CREATE PROCEDURE skill_update (
     IN r_skill_name VARCHAR(64)
 )
 BEGIN
+	IF EXISTS (SELECT 1 FROM Skill WHERE job_id = r_job_id) THEN
 	UPDATE Skill
     SET skill_name = r_skill_name
-    WHERE job_id = r_job_id;
+		WHERE job_id = r_job_id;
+	ELSE
+    INSERT INTO Skill (job_id, skill_name)
+    VALUES (r_job_id, r_skill_name);
+	END IF;
 END //
 DELIMITER ;
 
@@ -383,9 +393,14 @@ CREATE PROCEDURE interview_update (
 	IN r_description VARCHAR(500)
 )
 BEGIN
+IF EXISTS (SELECT 1 FROM Interview WHERE job_id = r_job_id) THEN
 	UPDATE Interview
     SET interview_type = r_interview_type, description = r_description
     WHERE job_id = r_job_id;
+ELSE
+    INSERT INTO Interview (job_id, interview_type, description)
+    VALUES (r_job_id, r_interview_type, r_description);
+	END IF;
 END //
 DELIMITER ;
 

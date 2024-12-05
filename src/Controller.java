@@ -7,25 +7,71 @@ import java.util.List;
 import java.util.Map;
 
 public class Controller {
-
+    // Instance of the Model.
     Model model = new Model();
 
+    /**
+     * Logs into the database.
+     * 
+     * @param databaseUsername The username to log into the database.
+     * @param databasePassword The password to log into the database.
+     * 
+     * @throws SQLException
+     */
     public void dbLogin(String databaseUsername, String databasePassword) throws SQLException {
         model.databaseLogin(databaseUsername, databasePassword);
     }
 
+    /**
+     * Checks if a user exists in the database.
+     * 
+     * @param appUsername The username to check.
+     * 
+     * @return true if the user exists, false otherwise.
+     * 
+     * @throws SQLException
+     */
     public boolean checkUserExist(String appUsername) throws SQLException {
         return model.existsUsername(appUsername);
     }
 
+    /**
+     * Verifies if the provided password matches the stored password for a given user.
+     * 
+     * @param appUsername The username whose password is being verified.
+     * @param password The password to verify.
+     * 
+     * @return true if the password matches, false otherwise.
+     * 
+     * @throws SQLException
+     */
     public boolean checkPassword(String appUsername, String password) throws SQLException {
         return model.passwordMatch(appUsername, password);
     }
 
+    /**
+     * Registers a new user in the database.
+     * 
+     * @param newUsername The username for the new user.
+     * @param newPassword The password for the new user.
+     * 
+     * @return true if the user was successfully added, false otherwise.
+     * 
+     * @throws SQLException
+     */
     public boolean addUserToDB(String newUsername, String newPassword) throws SQLException {
         return model.addUser(newUsername, newPassword);
     }
 
+    /**
+     * Displays records for current log in user.
+     * 
+     * @param newUsername The username whose records are being fetched.
+     * 
+     * @return A list of maps representing user records.
+     * 
+     * @throws SQLException
+     */
     public List<Map<String, String>> DisplayRecord(String newUsername) throws SQLException {
         List<Map<String, String>> results = new ArrayList<>();
         ResultSet rs = model.ShowUserRecord(newUsername);
@@ -48,6 +94,15 @@ public class Controller {
         return results;
     }
     
+    /**
+     * Displays benefits for a given job ID.
+     * 
+     * @param jobID The job ID to fetch benefits for.
+     * 
+     * @return A list of maps representing the benefits.
+     * 
+     * @throws SQLException
+     */
     public List<Map<String, String>> DisplayRecordBenefit(int jobID) throws SQLException {
         List<Map<String, String>> benefit = new ArrayList<>();
         ResultSet rsb = model.ShowUserRecordBenefit(jobID);
@@ -60,6 +115,15 @@ public class Controller {
         return benefit;
     }
 
+    /**
+     * Displays interviews for a given job ID.
+     * 
+     * @param jobID The job ID to fetch benefits for.
+     * 
+     * @return A list of maps representing the interviews.
+     * 
+     * @throws SQLException
+     */
     public List<Map<String, String>> DisplayRecordInterview(int jobID) throws SQLException {
         List<Map<String, String>> interview = new ArrayList<>();
         ResultSet rsi = model.ShowUserRecordInterview(jobID);
@@ -72,6 +136,15 @@ public class Controller {
         return interview;
     }
 
+    /**
+     * Displays skills for a given job ID.
+     * 
+     * @param jobID The job ID to fetch benefits for.
+     * 
+     * @return A list of maps representing the skills.
+     * 
+     * @throws SQLException
+     */
     public List<Map<String, String>> DisplayRecordSkill(int jobID) throws SQLException {
         List<Map<String, String>> skill = new ArrayList<>();
         ResultSet rss = model.ShowUserRecordSkill(jobID);
@@ -83,38 +156,122 @@ public class Controller {
         return skill;
     }
 
+    /**
+     * Updates a job record with new information.
+     * 
+     * @param jobID The ID of the job to update.
+     * @param stateAbb The state abbreviation.
+     * @param companyName The company name.
+     * @param industryName The industry name.
+     * @param positionName The position name.
+     * @param year The year of the job.
+     * @param salaryAmount The salary amount for the job.
+     * @param description The description of the job.
+     * @param degree The degree required for the job.
+     * @param yearOfWork The number of years of work experience.
+     * @param universityName The university name.
+     * 
+     * @throws SQLException
+     */
     public void callUpdateRecord(int jobID, String stateAbb, String companyName, String industryName, String positionName, int year, BigDecimal salaryAmount, String description, String degree, int yearOfWork, String universityName) throws SQLException {
         model.updateRecord(jobID, stateAbb, companyName, industryName, positionName, year, salaryAmount, description, degree, yearOfWork, universityName);
     }
 
+    /**
+     * Deletes a job record from the database.
+     * 
+     * @param jobID The job ID to delete.
+     * @throws SQLException
+     */
     public void callDeleteRecord(int jobID) throws SQLException {
         model.deleteRecord(jobID);
     }
 
+    /**
+     * Updates a benefit record with new information.
+     * 
+     * @param jobID The ID of the job to update.
+     * @param benefitType The type of the benefit.
+     * @param benefitName The name of the benefit.
+     * 
+     * @throws SQLException
+     */
     public void callUpdateBenefit(int jobID, String benefitType, String benefitName) throws SQLException {
         model.updateBenefit(jobID, benefitType, benefitName);
     }
 
+    /**
+     * Deletes a benefit record from the database.
+     * 
+     * @param jobID The job ID to delete.
+     * @throws SQLException
+     */
     public void callDeleteBenefit(int jobID) throws SQLException {
         model.deleteBenefit(jobID);
     }
 
+    /**
+     * Updates a skill record with new information.
+     * 
+     * @param jobID The ID of the job to update.
+     * @param skillName The name of the skill.
+     * 
+     * @throws SQLException
+     */
     public void callUpdateSkill(int jobID, String skillName) throws SQLException {
         model.updateSkill(jobID, skillName);
     }
 
+    /**
+     * Deletes a skill record from the database.
+     * 
+     * @param jobID The job ID to delete.
+     * @throws SQLException
+     */
     public void callDeleteSkill(int jobID) throws SQLException {
         model.deleteSkill(jobID);
     }
 
+    /**
+     * Updates a interview record with new information.
+     * 
+     * @param jobID The ID of the job to update.
+     * @param interviewType The type of the interview.
+     * @param description The description of the interview.
+     * 
+     * @throws SQLException
+     */
     public void callUpdateInterview(int jobID, String interviewType, String description) throws SQLException {
         model.updateInterview(jobID, interviewType, description);
     }
 
+    /**
+     * Deletes a interview record from the database.
+     * 
+     * @param jobID The job ID to delete.
+     * @throws SQLException
+     */
     public void callDeleteInterview(int jobID) throws SQLException {
         model.deleteInterview(jobID);
     }
 
+    /**
+     * Executes a search in the database based on various search criteria.
+     * 
+     * @param area The area of the job.
+     * @param stateAbbr The state abbreviation.
+     * @param industryName The name of the industry.
+     * @param companyBranch The company branch.
+     * @param positionName The job position.
+     * @param year The year of the job.
+     * @param degree The degree required for the job.
+     * @param universityName The name of the university.
+     * @param yearOfWork The number of years of work experience required.
+     * 
+     * @return A list of maps representing search results.
+     * 
+     * @throws SQLException
+     */
     public List<Map<String, String>> executeSearchFromDB(
         String area, String stateAbbr, String industryName, String companyBranch, String positionName, 
         Integer year, String degree, String universityName, Integer yearOfWork) throws SQLException {
@@ -161,6 +318,13 @@ public class Controller {
         return results;
     }
 
+    /**
+     * Retrieves a list of company names from the database.
+     * 
+     * @return A list of company names.
+     * 
+     * @throws SQLException
+     */
     public List<String> searchCompanyList() throws SQLException {
         List<String> companyNames = new ArrayList<>();
         ResultSet rs = model.searchCompany();
@@ -170,43 +334,125 @@ public class Controller {
         return companyNames;
     }
 
+    /**
+     * Adds a rating for a given company.
+     * @param username The username submitting the rating.
+     * @param companyBranch The company being rated.
+     * @param rate The rating value.
+     * 
+     * @return true if the rating was added successfully, false otherwise.
+     * 
+     * @throws SQLException
+     */
     public boolean addRateToDB(String username, String companyBranch, int rate) throws SQLException {
         return model.addRate(username, companyBranch, rate);
     }
 
+    /**
+     * Displays the average rating for a given company branch.
+     * 
+     * @param CompanyBranch The company branch to get the rating for.
+     * 
+     * @return The average rating as a BigDecimal.
+     * 
+     * @throws SQLException
+     */
     public BigDecimal showRate(String CompanyBranch) throws SQLException {
         return model.displayRate(CompanyBranch);
     }
 
+    /**
+     * Closes the database connection.
+     * 
+     * @throws SQLException
+     */
     public void exit() throws SQLException {
         model.disconnect();
     }
 
+    /**
+     * Retrieves or creates a company ID.
+     * 
+     * @param companyName The company name.
+     * @param stateAbbr The state abbreviation.
+     * @param industryName The industry name.
+     * 
+     * @return The company ID.
+     * 
+     * @throws SQLException
+     */
     public int getOrCreateCompanyId(String companyName, String stateAbbr, String industryName) throws SQLException {
         return model.getOrCreateCompanyId(companyName, stateAbbr, industryName);
     }
 
-    // Insert Job Position and get the generated job_id
+    /**
+     * Inserts a new job position into the database and returns the generated job ID.
+     * 
+     * @param positionName The name of the job position.
+     * @param description A description of the job position.
+     * @param year The year the job position was created.
+     * @param salary The salary for the job.
+     * @param companyId The ID of the company offering the job.
+     * @param username The username of the person adding the job position.
+     * 
+     * @return The generated job ID.
+     * 
+     * @throws SQLException
+     */
     public int insertJobPosition(String positionName, String description, int year, BigDecimal salary, int companyId, String username) throws SQLException {
         return model.addJobPosition(positionName, description, year, salary, companyId, username);
     }
 
-    // Insert Background
+
+    /**
+     * Inserts background information for a given job position.
+     * 
+     * @param jobId The job ID to insert the background information for.
+     * @param degree The degree required for the position.
+     * @param universityName The university name.
+     * @param yearOfWork The number of years of work experience required.
+     * @param username The username of the person adding the background information.
+     * 
+     * @throws SQLException
+     */
     public void insertBackground(int jobId, String degree, String universityName, int yearOfWork, String username) throws SQLException {
         model.addBackground(jobId, degree, universityName, yearOfWork, username);
     }
 
-    // Insert Benefit
+    /**
+     * Inserts a benefit for a given job position.
+     * 
+     * @param jobId The job ID to insert the benefit for.
+     * @param benefitType The type of benefit.
+     * @param benefitName The name of the benefit.
+     * 
+     * @throws SQLException
+     */
     public void insertBenefit(int jobId, String benefitType, String benefitName) throws SQLException {
         model.addBenefit(jobId, benefitType, benefitName);
     }
 
-    // Insert Skill
+    /**
+     * Inserts a skill required for a given job position.
+     * 
+     * @param jobId The job ID to insert the skill for.
+     * @param skillName The name of the skill.
+     * 
+     * @throws SQLException
+     */
     public void insertSkill(int jobId, String skillName) throws SQLException {
         model.addSkill(jobId, skillName);
     }
 
-    // Insert Interview
+    /**
+     * Inserts an interview record for a given job position.
+     * 
+     * @param jobId The job ID to insert the interview for.
+     * @param interviewType The type of interview.
+     * @param description A description of the interview process.
+     * 
+     * @throws SQLException
+     */
     public void insertInterview(int jobId, String interviewType, String description) throws SQLException {
         model.addInterview(jobId, interviewType, description);
     }

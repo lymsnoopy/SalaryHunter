@@ -5,11 +5,16 @@ import java.sql.SQLException;
 import javax.swing.*;
 
 public class AppLoginFrame extends JFrame {
-    private JTextField usernameField;
-    private JPasswordField passwordField;
-    private String username;
-    private String password;
+    private JTextField usernameField;  // Input field for the username.
+    private JPasswordField passwordField;  // Input field for the password.
+    private String username;  // Username of the user.
+    private String password;  // Password of the user.
 
+    /**
+     * Constructor of the login frame.
+     * 
+     * @param controller The controller.
+     */
     public AppLoginFrame(Controller controller) {
         setTitle("App Login Page");
         setSize(600, 400);

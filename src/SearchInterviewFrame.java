@@ -6,6 +6,13 @@ import javax.swing.table.DefaultTableModel;
 
 public class SearchInterviewFrame extends JFrame {
 
+    /**
+     * Constructor of the SearchInterviewFrame class.
+     * 
+     * @param controller The controller.
+     * @param interviewDetails List of maps containing interview details to be displayed in the table.
+     * @param job_id The job ID associated with the interview.
+     */
     public SearchInterviewFrame(Controller controller, List<Map<String, String>> interviewDetails, int job_id) {
         setTitle("Interview Details");
         setSize(600, 400);

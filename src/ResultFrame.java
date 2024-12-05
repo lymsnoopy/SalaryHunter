@@ -11,6 +11,13 @@ import javax.swing.table.TableCellRenderer;
 
 public class ResultFrame extends JFrame {
 
+    /**
+     * Constructor of the ResultFrame class.
+     * 
+     * @param results List that includes the information.
+     * @param controller The controller.
+     * @param username Username of the current user log in.
+     */
     public ResultFrame(List<Map<String, String>> results, Controller controller, String username) {
         setTitle("Search Result");
         setSize(2000, 500);
@@ -101,7 +108,9 @@ public class ResultFrame extends JFrame {
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    // ButtonRenderer class for rendering the button
+    /**
+     * ButtonRenderer class renders the buttons in the "Update", "Save", "Cancel", and "Delete" columns.
+     */
     private static class ButtonRenderer extends JButton implements TableCellRenderer {
         public ButtonRenderer() {
             setOpaque(true);
@@ -115,10 +124,18 @@ public class ResultFrame extends JFrame {
         }
     }
 
-    // PersistentButtonEditor class for handling "View Details" button clicks without disappearing
+    /**
+     * PersistentButtonEditor class for handling "View Details" button clicks without disappearing.
+     */
     private class PersistentButtonEditor extends AbstractCellEditor implements TableCellEditor {
-        private JButton button;
+        private JButton button;  // The button used for each action.
     
+        /**
+         * Constructor of the PersistentButtonEditor class.
+         * 
+         * @param controller The controller.
+         * @param type The action type.
+         */
         public PersistentButtonEditor(Controller controller, String type) {
             button = new JButton();
             button.setOpaque(true);

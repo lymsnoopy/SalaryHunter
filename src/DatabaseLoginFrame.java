@@ -5,13 +5,17 @@ import java.sql.SQLException;
 import javax.swing.*;
 
 public class DatabaseLoginFrame extends JFrame {
-    private JTextField usernameField;
-    private JPasswordField passwordField;
-    private String username;
-    private String password;
-    private Controller controller = new Controller();
+    private JTextField usernameField;  // Text field for the username input.
+    private JPasswordField passwordField;  // Password field for the password input.
+    private String username;  // Username of the user.
+    private String password;  // Password of the user.
+    private Controller controller = new Controller();  // Instance of Controller.
 
+    /**
+     * Constructor of the class.
+     */
     public DatabaseLoginFrame() {
+        // Set the title and properties.
         setTitle("Database Login Page");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
