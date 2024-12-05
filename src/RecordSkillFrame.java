@@ -28,16 +28,16 @@ public class RecordSkillFrame extends JFrame {
         setLocationRelativeTo(null);
 
         // Define column names
-        String[] columnNames = {"Skill Name", "Update", "Save", "Cancel", "Delete"};
+        String[] columnNames = {"Skill ID", "Skill Name", "Update", "Save", "Cancel", "Delete"};
 
         // Create table model
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                if (column >= 1 && column <= 4) {
+                if (column >= 2 && column <= 5) {
                     return true;
                 }
-                if (isUpdateMode && column == 0 && row == currentRow) {
+                if (isUpdateMode && column == 1 && row == currentRow) {
                     return true;
                 }
                 return false;
@@ -47,12 +47,13 @@ public class RecordSkillFrame extends JFrame {
         // Populate the table with interview details
         if (skillDetails != null && !skillDetails.isEmpty()) {
             for (Map<String, String> detail : skillDetails) {
+                String skillID = detail.get("skillID");
                 String skillName = detail.get("skillName");
-                tableModel.addRow(new Object[]{skillName, "Update", "Save", "Cancel", "Delete"});
+                tableModel.addRow(new Object[]{skillID, skillName, "Update", "Save", "Cancel", "Delete"});
             }
         } else {
             // If no details are available, add a single row indicating no data
-            tableModel.addRow(new Object[]{"No skill details available", "Update", "Save", "Cancel", "Delete"});
+            tableModel.addRow(new Object[]{"No skill details available", "", "Update", "Save", "Cancel", "Delete"});
         }
 
         // Create the table
@@ -127,12 +128,13 @@ public class RecordSkillFrame extends JFrame {
                     int selectedRow = table.getSelectedRow();
                     if (selectedRow != -1) {
                         try {
-                            String skillName = (String) tableModel.getValueAt(selectedRow, 0);
+                            int skillid = Integer.parseInt((String) tableModel.getValueAt(selectedRow, 0));
+                            String skillName = (String) tableModel.getValueAt(selectedRow, 1);
                             
                             if (skillName.isEmpty()) {
                                 JOptionPane.showMessageDialog(RecordSkillFrame.this, "Field cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
                             } else {
-                                controller.callUpdateSkill(job_id, skillName);
+                                controller.callUpdateSkill(job_id, skillid, skillName);
                                 isUpdateMode = false;
                                 tableModel.fireTableDataChanged();
                                 JOptionPane.showMessageDialog(RecordSkillFrame.this, "Update successfully!", "Update Message", JOptionPane.INFORMATION_MESSAGE);
@@ -160,7 +162,8 @@ public class RecordSkillFrame extends JFrame {
                     }
                     if (selectedRow != -1) {
                         try {
-                            controller.callDeleteSkill(job_id);
+                            int skillid = Integer.parseInt((String) tableModel.getValueAt(selectedRow, 0));
+                            controller.callDeleteSkill(job_id, skillid);
                             tableModel.removeRow(selectedRow);
                             tableModel.fireTableRowsDeleted(selectedRow, selectedRow);
                             JOptionPane.showMessageDialog(RecordSkillFrame.this, "Delete successfully!", "Update Message", JOptionPane.INFORMATION_MESSAGE);

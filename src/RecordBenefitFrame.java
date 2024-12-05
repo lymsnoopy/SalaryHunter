@@ -28,16 +28,16 @@ public class RecordBenefitFrame extends JFrame {
         setLocationRelativeTo(null);
 
         // Define column names
-        String[] columnNames = {"Benefit Type", "Specific Benefit", "Update", "Save", "Cancel", "Delete"};
+        String[] columnNames = {"Benefit ID", "Benefit Type", "Specific Benefit", "Update", "Save", "Cancel", "Delete"};
 
         // Create table model
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                if (column >= 2 && column <= 5) {
+                if (column >= 3 && column <= 6) {
                     return true;
                 }
-                if (isUpdateMode && column >= 0 && column <= 1 && row == currentRow) {
+                if (isUpdateMode && column >= 1 && column <= 2 && row == currentRow) {
                     return true;
                 }
                 return false;
@@ -47,13 +47,14 @@ public class RecordBenefitFrame extends JFrame {
         // Populate the table with benefit details
         if (benefitDetails != null && !benefitDetails.isEmpty()) {
             for (Map<String, String> detail : benefitDetails) {
+                String benefitID = detail.get("benefitID");
                 String benefitType = detail.get("benefitType");
                 String benefitName = detail.get("benefitName");
-                tableModel.addRow(new Object[]{benefitType, benefitName, "Update", "Save", "Cancel", "Delete"});
+                tableModel.addRow(new Object[]{benefitID, benefitType, benefitName, "Update", "Save", "Cancel", "Delete"});
             }
         } else {
             // If no details are available, add a single row indicating no data
-            tableModel.addRow(new Object[]{"No benefit details available", "", "Update", "Save", "Cancel", "Delete"});
+            tableModel.addRow(new Object[]{"No benefit details available", "", "", "Update", "Save", "Cancel", "Delete"});
         }
 
         // Create the table
@@ -133,12 +134,13 @@ public class RecordBenefitFrame extends JFrame {
                     int selectedRow = table.getSelectedRow();
                     if (selectedRow != -1) {
                         try {
-                            String benefitType = (String) tableModel.getValueAt(selectedRow, 0);
-                            String benefitName = (String) tableModel.getValueAt(selectedRow, 1);
+                            int benefitid = Integer.parseInt((String) tableModel.getValueAt(selectedRow, 0));
+                            String benefitType = (String) tableModel.getValueAt(selectedRow, 1);
+                            String benefitName = (String) tableModel.getValueAt(selectedRow, 2);
                             if (benefitType.isEmpty() || benefitName.isEmpty()) {
                                 JOptionPane.showMessageDialog(RecordBenefitFrame.this, "Field cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
                             } else {
-                                controller.callUpdateBenefit(job_id, benefitType, benefitName);
+                                controller.callUpdateBenefit(job_id, benefitid, benefitType, benefitName);
                                 isUpdateMode = false;
                                 tableModel.fireTableDataChanged();
                                 JOptionPane.showMessageDialog(RecordBenefitFrame.this, "Update successfully!", "Update Message", JOptionPane.INFORMATION_MESSAGE);
@@ -165,7 +167,8 @@ public class RecordBenefitFrame extends JFrame {
                     }
                     if (selectedRow != -1) {
                         try {
-                            controller.callDeleteBenefit(job_id);
+                            int benefitid = Integer.parseInt((String) tableModel.getValueAt(selectedRow, 0));
+                            controller.callDeleteBenefit(job_id, benefitid);
                             tableModel.removeRow(selectedRow);
                             tableModel.fireTableRowsDeleted(selectedRow, selectedRow);
                             JOptionPane.showMessageDialog(RecordBenefitFrame.this, "Delete successfully!", "Update Message", JOptionPane.INFORMATION_MESSAGE);

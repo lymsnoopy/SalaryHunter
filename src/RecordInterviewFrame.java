@@ -28,16 +28,16 @@ public class RecordInterviewFrame extends JFrame {
         setLocationRelativeTo(null);
 
         // Define column names
-        String[] columnNames = {"Interview Type", "Description", "Update", "Save", "Cancel", "Delete"};
+        String[] columnNames = {"Interview ID", "Interview Type", "Description", "Update", "Save", "Cancel", "Delete"};
 
         // Create table model
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                if (column >= 2 && column <= 5) {
+                if (column >= 3 && column <= 6) {
                     return true;
                 }
-                if (isUpdateMode && column >= 0 && column <= 1 && row == currentRow) {
+                if (isUpdateMode && column >= 1 && column <= 2 && row == currentRow) {
                     return true;
                 }
                 return false;
@@ -47,13 +47,14 @@ public class RecordInterviewFrame extends JFrame {
         // Populate the table with interview details
         if (interviewDetails != null && !interviewDetails.isEmpty()) {
             for (Map<String, String> detail : interviewDetails) {
+                String interviewID = detail.get("interviewID");
                 String interviewType = detail.get("interviewType");
                 String description = detail.get("interviewDescription");
-                tableModel.addRow(new Object[]{interviewType, description, "Update", "Save", "Cancel", "Delete"});
+                tableModel.addRow(new Object[]{interviewID, interviewType, description, "Update", "Save", "Cancel", "Delete"});
             }
         } else {
             // If no details are available, add a single row indicating no data
-            tableModel.addRow(new Object[]{"No interview details available", "", "Update", "Save", "Cancel", "Delete"});
+            tableModel.addRow(new Object[]{"No interview details available", "", "", "Update", "Save", "Cancel", "Delete"});
         }
 
         // Create the table
@@ -133,12 +134,13 @@ public class RecordInterviewFrame extends JFrame {
                     int selectedRow = table.getSelectedRow();
                     if (selectedRow != -1) {
                         try {
-                            String interviewType = (String) tableModel.getValueAt(selectedRow, 0);
-                            String description = (String) tableModel.getValueAt(selectedRow, 1);
+                            int interviewid = Integer.parseInt((String) tableModel.getValueAt(selectedRow, 0));
+                            String interviewType = (String) tableModel.getValueAt(selectedRow, 1);
+                            String description = (String) tableModel.getValueAt(selectedRow, 2);
                             if (interviewType.isEmpty() || description.isEmpty()) {
                                 JOptionPane.showMessageDialog(RecordInterviewFrame.this, "Field cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
                             } else {
-                                controller.callUpdateInterview(job_id, interviewType, description);
+                                controller.callUpdateInterview(job_id, interviewid, interviewType, description);
                                 isUpdateMode = false;
                                 tableModel.fireTableDataChanged();
                                 JOptionPane.showMessageDialog(RecordInterviewFrame.this, "Update successfully!", "Update Message", JOptionPane.INFORMATION_MESSAGE);
@@ -165,7 +167,8 @@ public class RecordInterviewFrame extends JFrame {
                     }
                     if (selectedRow != -1) {
                         try {
-                            controller.callDeleteInterview(job_id);
+                            int interviewid = Integer.parseInt((String) tableModel.getValueAt(selectedRow, 0));
+                            controller.callDeleteInterview(job_id,interviewid);
                             tableModel.removeRow(selectedRow);
                             tableModel.fireTableRowsDeleted(selectedRow, selectedRow);
                             JOptionPane.showMessageDialog(RecordInterviewFrame.this, "Delete successfully!", "Update Message", JOptionPane.INFORMATION_MESSAGE);

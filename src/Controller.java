@@ -108,6 +108,7 @@ public class Controller {
         ResultSet rsb = model.ShowUserRecordBenefit(jobID);
         while (rsb.next()) {
             Map<String, String> rowb = new HashMap<>();
+            rowb.put("benefitID", rsb.getString("benefit_id"));
             rowb.put("benefitType", rsb.getString("benefit_type"));
             rowb.put("benefitName", rsb.getString("benefit_name"));
             benefit.add(rowb);
@@ -129,6 +130,7 @@ public class Controller {
         ResultSet rsi = model.ShowUserRecordInterview(jobID);
         while (rsi.next()) {
             Map<String, String> rowi = new HashMap<>();
+            rowi.put("interviewID", rsi.getString("interview_id"));
             rowi.put("interviewType", rsi.getString("interview_type"));
             rowi.put("interviewDescription", rsi.getString("description"));
             interview.add(rowi);
@@ -150,6 +152,7 @@ public class Controller {
         ResultSet rss = model.ShowUserRecordSkill(jobID);
         while (rss.next()) {
             Map<String, String> rows = new HashMap<>();
+            rows.put("skillID", rss.getString("skill_id"));
             rows.put("skillName", rss.getString("skill_name"));
             skill.add(rows);
         }
@@ -191,68 +194,76 @@ public class Controller {
      * Updates a benefit record with new information.
      * 
      * @param jobID The ID of the job to update.
+     * @param benefitID The ID of the benefit.
      * @param benefitType The type of the benefit.
      * @param benefitName The name of the benefit.
      * 
      * @throws SQLException
      */
-    public void callUpdateBenefit(int jobID, String benefitType, String benefitName) throws SQLException {
-        model.updateBenefit(jobID, benefitType, benefitName);
+    public void callUpdateBenefit(int jobID, int benefitID, String benefitType, String benefitName) throws SQLException {
+        model.updateBenefit(jobID, benefitID, benefitType, benefitName);
     }
 
     /**
      * Deletes a benefit record from the database.
-     * 
+     * @param benefitID The ID of the benefit.
      * @param jobID The job ID to delete.
+     * 
      * @throws SQLException
      */
-    public void callDeleteBenefit(int jobID) throws SQLException {
-        model.deleteBenefit(jobID);
+    public void callDeleteBenefit(int jobID, int benefitID) throws SQLException {
+        model.deleteBenefit(jobID, benefitID);
     }
 
     /**
      * Updates a skill record with new information.
      * 
      * @param jobID The ID of the job to update.
+     * @param skillID The ID of the skill.
      * @param skillName The name of the skill.
      * 
      * @throws SQLException
      */
-    public void callUpdateSkill(int jobID, String skillName) throws SQLException {
-        model.updateSkill(jobID, skillName);
+    public void callUpdateSkill(int jobID, int skillID, String skillName) throws SQLException {
+        model.updateSkill(jobID, skillID, skillName);
     }
 
     /**
      * Deletes a skill record from the database.
      * 
      * @param jobID The job ID to delete.
+     * @param skillID The ID of the skill.
+     * 
      * @throws SQLException
      */
-    public void callDeleteSkill(int jobID) throws SQLException {
-        model.deleteSkill(jobID);
+    public void callDeleteSkill(int jobID, int skillID) throws SQLException {
+        model.deleteSkill(jobID, skillID);
     }
 
     /**
      * Updates a interview record with new information.
      * 
      * @param jobID The ID of the job to update.
+     * @param interviewID The ID of the interview.
      * @param interviewType The type of the interview.
      * @param description The description of the interview.
      * 
      * @throws SQLException
      */
-    public void callUpdateInterview(int jobID, String interviewType, String description) throws SQLException {
-        model.updateInterview(jobID, interviewType, description);
+    public void callUpdateInterview(int jobID, int interviewID, String interviewType, String description) throws SQLException {
+        model.updateInterview(jobID, interviewID, interviewType, description);
     }
 
     /**
      * Deletes a interview record from the database.
      * 
      * @param jobID The job ID to delete.
+     * @param interviewID The ID of the interview.
+     * 
      * @throws SQLException
      */
-    public void callDeleteInterview(int jobID) throws SQLException {
-        model.deleteInterview(jobID);
+    public void callDeleteInterview(int jobID, int interviewID) throws SQLException {
+        model.deleteInterview(jobID, interviewID);
     }
 
     /**

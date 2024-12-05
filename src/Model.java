@@ -215,18 +215,20 @@ public class Model {
      * Updates a benefit record with new information.
      * 
      * @param jobID The ID of the job to update.
+     * @param benefitID The ID of the benefit.
      * @param benefitType The type of the benefit.
      * @param benefitName The name of the benefit.
      * 
      * @throws SQLException
      */
-    public void updateBenefit(int jobID, String benefitType, String benefitName) throws SQLException {
+    public void updateBenefit(int jobID, int benefitID, String benefitType, String benefitName) throws SQLException {
         PreparedStatement benefitUpdate = connection.prepareStatement(
-            "{ CALL benefit_update(?, ?, ?) }"
+            "{ CALL benefit_update(?, ?, ?, ?) }"
         );
         benefitUpdate.setInt(1, jobID);
-        benefitUpdate.setString(2, benefitType);
-        benefitUpdate.setString(3, benefitName);
+        benefitUpdate.setInt(2, benefitID);
+        benefitUpdate.setString(3, benefitType);
+        benefitUpdate.setString(4, benefitName);
         benefitUpdate.executeQuery();
     }
 
@@ -234,13 +236,15 @@ public class Model {
      * Deletes a benefit record from the database.
      * 
      * @param jobID The job ID to delete.
+     * @param benefitID The ID of the benefit.
      * @throws SQLException
      */
-    public void deleteBenefit(int jobID) throws SQLException {
+    public void deleteBenefit(int jobID, int benefitID) throws SQLException {
         PreparedStatement benefitDelete = connection.prepareStatement(
-            "{ CALL benefit_delete(?) }"
+            "{ CALL benefit_delete(?, ?) }"
         );
         benefitDelete.setInt(1, jobID);
+        benefitDelete.setInt(2, benefitID);
         benefitDelete.executeQuery();
     }
 
@@ -248,16 +252,18 @@ public class Model {
      * Updates a skill record with new information.
      * 
      * @param jobID The ID of the job to update.
+     * @param skillID The ID of the skill.
      * @param skillName The name of the skill.
      * 
      * @throws SQLException
      */
-    public void updateSkill(int jobID, String skillName) throws SQLException {
+    public void updateSkill(int jobID, int skillID, String skillName) throws SQLException {
         PreparedStatement skillUpdate = connection.prepareStatement(
-            "{ CALL skill_update(?, ?) }"
+            "{ CALL skill_update(?, ?, ?) }"
         );
         skillUpdate.setInt(1, jobID);
-        skillUpdate.setString(2, skillName);
+        skillUpdate.setInt(2, skillID);
+        skillUpdate.setString(3, skillName);
         skillUpdate.executeQuery();
     }
 
@@ -265,13 +271,16 @@ public class Model {
      * Deletes a skill record from the database.
      * 
      * @param jobID The job ID to delete.
+     * @param skillID The ID of the skill.
+     * 
      * @throws SQLException
      */
-    public void deleteSkill(int jobID) throws SQLException {
+    public void deleteSkill(int jobID, int skillID) throws SQLException {
         PreparedStatement skillDelete = connection.prepareStatement(
-            "{ CALL skill_delete(?) }"
+            "{ CALL skill_delete(?, ?) }"
         );
         skillDelete.setInt(1, jobID);
+        skillDelete.setInt(2, skillID);
         skillDelete.executeQuery();
     }
 
@@ -279,18 +288,20 @@ public class Model {
      * Updates a interview record with new information.
      * 
      * @param jobID The ID of the job to update.
+     * @param interviewID The ID of the interview.
      * @param interviewType The type of the interview.
      * @param description The description of the interview.
      * 
      * @throws SQLException
      */
-    public void updateInterview(int jobID, String interviewType, String description) throws SQLException {
+    public void updateInterview(int jobID, int interviewID, String interviewType, String description) throws SQLException {
         PreparedStatement interviewUpdate = connection.prepareStatement(
-            "{ CALL interview_update(?, ?, ?) }"
+            "{ CALL interview_update(?, ?, ?, ?) }"
         );
         interviewUpdate.setInt(1, jobID);
-        interviewUpdate.setString(2, interviewType);
-        interviewUpdate.setString(3, description);
+        interviewUpdate.setInt(2, interviewID);
+        interviewUpdate.setString(3, interviewType);
+        interviewUpdate.setString(4, description);
         interviewUpdate.executeQuery();
     }
 
@@ -298,13 +309,16 @@ public class Model {
      * Deletes a interview record from the database.
      * 
      * @param jobID The job ID to delete.
+     * @param interviewID The ID of the interview.
+     * 
      * @throws SQLException
      */
-    public void deleteInterview(int jobID) throws SQLException {
+    public void deleteInterview(int jobID, int interviewID) throws SQLException {
         PreparedStatement interviewDelete = connection.prepareStatement(
-            "{ CALL interview_delete(?) }"
+            "{ CALL interview_delete(?, ?) }"
         );
         interviewDelete.setInt(1, jobID);
+        interviewDelete.setInt(2, interviewID);
         interviewDelete.executeQuery();
     }
 
