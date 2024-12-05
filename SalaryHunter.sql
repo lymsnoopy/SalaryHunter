@@ -530,6 +530,7 @@ CREATE FUNCTION GetCompanyID(
     p_industry_name VARCHAR(64)
 )
 RETURNS INT 
+DETERMINISTIC MODIFIES SQL DATA
 BEGIN
 	DECLARE v_company_id INT;
     SELECT company_id INTO v_company_id FROM Company_Branch 
@@ -555,6 +556,7 @@ CREATE FUNCTION GetJobID(
     p_username VARCHAR(64)
 )
 RETURNS INT 
+DETERMINISTIC MODIFIES SQL DATA
 BEGIN
 	INSERT INTO Job_Position (position_name, description, year, salary_amount, company_id, username)
 	VALUES (p_position_name, p_description, p_year, p_salary_amount, p_company_id, p_username);
