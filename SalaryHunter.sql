@@ -289,7 +289,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` FUNCTION `check_user_exist`(
+CREATE DEFINER=`root`@`localhost` FUNCTION `check_user_exist`(
 	user VARCHAR(64) 
 ) RETURNS tinyint(1)
     READS SQL DATA
@@ -314,7 +314,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` FUNCTION `DisplayRate`(
+CREATE DEFINER=`root`@`localhost` FUNCTION `DisplayRate`(
 	 p_company VARCHAR(64)
 ) RETURNS decimal(10,2)
     READS SQL DATA
@@ -341,7 +341,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` FUNCTION `GetCompanyID`(
+CREATE DEFINER=`root`@`localhost` FUNCTION `GetCompanyID`(
 	p_company_name VARCHAR(64),
     p_state_abbr CHAR(2),
     p_industry_name VARCHAR(64)
@@ -375,7 +375,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` FUNCTION `GetJobID`(
+CREATE DEFINER=`root`@`localhost` FUNCTION `GetJobID`(
 	p_position_name VARCHAR(64),
 	p_description VARCHAR(500),
     p_year INT,
@@ -405,7 +405,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` FUNCTION `password_match`(
+CREATE DEFINER=`root`@`localhost` FUNCTION `password_match`(
     user VARCHAR(64) 
 ) RETURNS varchar(64) CHARSET utf8mb4
     READS SQL DATA
@@ -430,7 +430,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `benefit_delete`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `benefit_delete`(
 	IN r_job_id INT,
     IN r_benefit_id INT
 )
@@ -452,7 +452,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `benefit_update`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `benefit_update`(
 	IN r_job_id INT,
     IN r_benefit_id INT,
     IN r_benefit_type ENUM('Insurance', 'Holiday', 'Stock', 'Retirement', 'Family'),
@@ -483,7 +483,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `GetFilteredRecords`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetFilteredRecords`(
 	IN p_in_area VARCHAR(256),
     IN p_stateAbbr VARCHAR(256),
     IN p_industryName VARCHAR(64),
@@ -563,7 +563,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `InsertRate`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertRate`(
 	IN p_username VARCHAR(64),
     IN p_company VARCHAR(64),
     IN p_rate INT
@@ -589,7 +589,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `InsertUser`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertUser`(
     IN p_username VARCHAR(64),
     IN p_password VARCHAR(64)
 )
@@ -612,7 +612,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `insert_background`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_background`(
 	IN p_job_id INT,
     IN p_degree_level ENUM('BS', 'MS', 'PhD'),
     IN p_university_name VARCHAR(64),
@@ -638,7 +638,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `insert_benefit`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_benefit`(
 	IN p_job_id INT,
     IN p_benefit_type ENUM('Insurance', 'Holiday', 'Stock', 'Retirement', 'Family'),
     IN p_benefit_name VARCHAR(64)
@@ -662,7 +662,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `insert_interview`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_interview`(
 	IN r_job_id INT,
     IN r_interview_type ENUM (
 		'Online Assessment', 
@@ -691,7 +691,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `insert_skill`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_skill`(
 	IN p_job_id INT,
     IN p_skill_name VARCHAR(64)
 )
@@ -714,7 +714,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `interview_delete`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `interview_delete`(
 	IN r_job_id INT,
      IN r_interview_id INT
 )
@@ -736,7 +736,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `interview_update`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `interview_update`(
 	IN r_job_id INT,
     IN r_interview_id INT,
     IN r_interview_type ENUM (
@@ -772,7 +772,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `record_benefit`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `record_benefit`(
 	IN r_job_id INT 
 )
 BEGIN
@@ -794,7 +794,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `record_delete`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `record_delete`(
 	IN r_job_id INT
 )
 BEGIN
@@ -815,7 +815,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `record_interview`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `record_interview`(
 	IN r_job_id INT 
 )
 BEGIN
@@ -837,7 +837,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `record_skill`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `record_skill`(
 	IN r_job_id INT 
 )
 BEGIN
@@ -859,7 +859,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `record_update`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `record_update`(
 	IN r_job_id INT,
 	IN r_state_abbr CHAR(2),
     IN r_company_name VARCHAR(64),
@@ -902,7 +902,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `SearchCompany`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SearchCompany`()
 BEGIN
 	SELECT company_name FROM Company_Branch;
 END ;;
@@ -921,7 +921,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `skill_delete`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `skill_delete`(
 	IN r_job_id INT,
     IN r_skill_id INT
 )
@@ -943,7 +943,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `skill_update`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `skill_update`(
 	IN r_job_id INT,
     IN r_skill_id INT,
     IN r_skill_name VARCHAR(64)
@@ -973,7 +973,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`romine24`@`localhost` PROCEDURE `user_record`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `user_record`(
     IN r_username VARCHAR(64)
 )
 BEGIN
